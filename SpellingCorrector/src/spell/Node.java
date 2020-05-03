@@ -16,6 +16,6 @@ public class Node implements INode{
 
     @Override
     public INode[] getChildren() {
-        return new INode[0];
+        return nodeList;
     }
 }

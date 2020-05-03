@@ -5,6 +5,8 @@ public class Trie implements ITrie{
     private Node root = new Node();
     private int nodeCount = 1;
     private int wordCount = 0;
+    private StringBuilder wordList = new StringBuilder("");
+    private boolean isEqual = true;
 
     @Override
     public void add(String word) {
@@ -23,11 +25,11 @@ public class Trie implements ITrie{
             }
             currentNode = currentNode.nodeList[index];
         }
+        // Only increase the word count if the word dose not exist
         if(currentNode.getValue() == 0){
             wordCount += 1;
         }
         currentNode.incrementValue();
-
     }
 
     @Override
@@ -67,7 +69,108 @@ public class Trie implements ITrie{
     }
 
     @Override
-    public String toString() { return ""; }
+    public String toString() {
+        // Reset the word list each time this is called
+        wordList.setLength(0);
+        StringBuilder currentWord = new StringBuilder("");
+        // For each of the child nodes on the root node
+        for(int i = 0; i < root.nodeList.length; i++) {
+            // if the node is null skip it
+            if(root.nodeList[i] == null){
+                continue;
+            }
+            // Add teh letter and call the helper function
+            currentWord.append(getIndexCharacter(i));
+            toStringHelper(currentWord, root.nodeList[i]);
+            // Reset the current word
+            currentWord.setLength(0);
+        }
+        //Remove the last newline from the list of words only if the wordlist is not empty
+        if(wordList.length() != 0) {
+            wordList.setLength(wordList.length() - 1);
+        }
+        //System.out.print(wordList.toString());
+        return wordList.toString();
+    }
+
+    public void toStringHelper(StringBuilder currentWord, Node currentNode){
+        // Add the current word if the count is greater than 0
+        if(currentNode.getValue() > 0) {
+            wordList.append(currentWord + "\n");
+        }
+        // For each of the child nodes
+        for(int i = 0; i < currentNode.nodeList.length; i++) {
+            // If the child node is null skip that position
+            if (currentNode.nodeList[i] == null) {
+                continue;
+            }
+            // else add the character to the current word and call the toStringHelper function
+            currentWord.append(getIndexCharacter(i));
+            toStringHelper(currentWord, currentNode.nodeList[i]);
+        }
+        // Remove the last character from current word
+        currentWord.setLength(currentWord.length() - 1);
+    }
+
+    public String getIndexCharacter(int index){
+        // Used to convert an index into a letter to build the word
+        switch (index){
+            case 0:
+                return "a";
+            case 1:
+                return "b";
+            case 2:
+                return "c";
+            case 3:
+                return "d";
+            case 4:
+                return "e";
+            case 5:
+                return "f";
+            case 6:
+                return "g";
+            case 7:
+                return "h";
+            case 8:
+                return "i";
+            case 9:
+                return "j";
+            case 10:
+                return "k";
+            case 11:
+                return "l";
+            case 12:
+                return "m";
+            case 13:
+                return "n";
+            case 14:
+                return "o";
+            case 15:
+                return "p";
+            case 16:
+                return "q";
+            case 17:
+                return "r";
+            case 18:
+                return "s";
+            case 19:
+                return "t";
+            case 20:
+                return "u";
+            case 21:
+                return "v";
+            case 22:
+                return "w";
+            case 23:
+                return "x";
+            case 24:
+                return "y";
+            case 25:
+                return "z";
+            default:
+                return null;
+        }
+    }
 
     @Override
     public int hashCode() {
@@ -81,5 +184,48 @@ public class Trie implements ITrie{
     }
 
     @Override
-    public boolean equals(Object o) { return false; }
+    public boolean equals(Object o) {
+        // if the o is not an instance of Trie
+        if(!(o instanceof Trie)){
+            return false;
+        }
+        // if the object is null
+        if(o == null){
+            return false;
+        }
+        // if the word counts are different
+        if(((Trie) o).wordCount != this.wordCount){
+            return false;
+        }
+        // if the node counts are different
+        if(((Trie) o).nodeCount != this.nodeCount){
+            return false;
+        }
+        equalsHelper(root, ((Trie) o).root);
+        // Check the counts for each of the nodes
+        return isEqual;
+    }
+
+    public void equalsHelper(Node currentNode, Node objectNode){
+        for(int i = 0; i < currentNode.nodeList.length; i++) {
+            // if the child node is null skip that position
+            if(currentNode.nodeList[i] == null && objectNode.nodeList[i] == null){
+                continue;
+            }
+            // if there are nodes that exists in both trie
+            else if(currentNode.nodeList[i] != null && objectNode.nodeList[i] != null){
+                //if the counts are different then set isEqual to false
+                if(currentNode.getValue() != objectNode.getValue()){
+                    isEqual = false;
+                }
+                //else call the equalsHelper
+                equalsHelper(currentNode.nodeList[i], objectNode.nodeList[i]);
+            }
+            else{
+                isEqual = false;
+            }
+        }
+        // will return true if both are empty Tries
+    }
 }
+
