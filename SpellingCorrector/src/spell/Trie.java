@@ -112,63 +112,63 @@ public class Trie implements ITrie{
         currentWord.setLength(currentWord.length() - 1);
     }
 
-    public String getIndexCharacter(int index){
+    public char getIndexCharacter(int index){
         // Used to convert an index into a letter to build the word
         switch (index){
             case 0:
-                return "a";
+                return 'a';
             case 1:
-                return "b";
+                return 'b';
             case 2:
-                return "c";
+                return 'c';
             case 3:
-                return "d";
+                return 'd';
             case 4:
-                return "e";
+                return 'e';
             case 5:
-                return "f";
+                return 'f';
             case 6:
-                return "g";
+                return 'g';
             case 7:
-                return "h";
+                return 'h';
             case 8:
-                return "i";
+                return 'i';
             case 9:
-                return "j";
+                return 'j';
             case 10:
-                return "k";
+                return 'k';
             case 11:
-                return "l";
+                return 'l';
             case 12:
-                return "m";
+                return 'm';
             case 13:
-                return "n";
+                return 'n';
             case 14:
-                return "o";
+                return 'o';
             case 15:
-                return "p";
+                return 'p';
             case 16:
-                return "q";
+                return 'q';
             case 17:
-                return "r";
+                return 'r';
             case 18:
-                return "s";
+                return 's';
             case 19:
-                return "t";
+                return 't';
             case 20:
-                return "u";
+                return 'u';
             case 21:
-                return "v";
+                return 'v';
             case 22:
-                return "w";
+                return 'w';
             case 23:
-                return "x";
+                return 'x';
             case 24:
-                return "y";
+                return 'y';
             case 25:
-                return "z";
+                return 'z';
             default:
-                return null;
+                return '0';
         }
     }
 
