@@ -185,6 +185,8 @@ public class Trie implements ITrie{
 
     @Override
     public boolean equals(Object o) {
+        // Makes sure the isEqual is set to true before tying to compare
+        isEqual = true;
         // if the o is not an instance of Trie
         if(!(o instanceof Trie)){
             return false;
