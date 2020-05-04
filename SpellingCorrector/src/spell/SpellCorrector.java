@@ -46,21 +46,12 @@ public class SpellCorrector implements ISpellCorrector{
             // Word is in the Trie so return the word
             return lowerInputWord;
         }
-        // Create the 1 edit distance suggestions and candidate words
-        deleteEditDistance(lowerInputWord);
-        transpositionEditDistance(lowerInputWord);
-        alterationEditDistance(lowerInputWord);
-        insertionEditDistance(lowerInputWord);
+        
+        // Generate the Candidate list with the Lowercase word
+        generateCandidateList(lowerInputWord);
 
-        // From the list of candidate words find any that are in the dictionary
-        Iterator iterator = candidateList.iterator();
-        while (iterator.hasNext()){
-            String tempWord = iterator.next().toString();
-            // If the word is in the dictionary add to the suggestion list
-            if(myTrie.find(tempWord) != null){
-                suggestionList.add(tempWord);
-            }
-        }
+        // Create a Suggestion List
+        generateSuggestionList();
         // If the suggestion list is only 1 element long then suggest that word
         if(suggestionList.size() == 1){
             return suggestionList.first();
@@ -191,5 +182,25 @@ public class SpellCorrector implements ISpellCorrector{
             default:
                 return '0';
         }
+    }
+
+    public void generateSuggestionList(){
+        // From the list of candidate words find any that are in the dictionary
+        Iterator iterator = candidateList.iterator();
+        while (iterator.hasNext()){
+            String tempWord = iterator.next().toString();
+            // If the word is in the dictionary add to the suggestion list
+            if(myTrie.find(tempWord) != null){
+                suggestionList.add(tempWord);
+            }
+        }
+    }
+
+    public void generateCandidateList(String lowerInputWord){
+        // Create the candidate words
+        deleteEditDistance(lowerInputWord);
+        transpositionEditDistance(lowerInputWord);
+        alterationEditDistance(lowerInputWord);
+        insertionEditDistance(lowerInputWord);
     }
 }
