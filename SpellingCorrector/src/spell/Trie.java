@@ -227,7 +227,6 @@ public class Trie implements ITrie{
                 isEqual = false;
             }
         }
-        // will return true if both are empty Tries
     }
 }
 

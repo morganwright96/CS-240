@@ -2,10 +2,7 @@ package spell;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Scanner;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 
 public class SpellCorrector implements ISpellCorrector{
@@ -40,25 +37,57 @@ public class SpellCorrector implements ISpellCorrector{
 
         // The dictionary only contains lowercase words
         String lowerInputWord = inputWord.toLowerCase();
+        if(lowerInputWord.isEmpty()){
+            return null;
+        }
 
         // Try to find the word
         if(myTrie.find(lowerInputWord) != null){
             // Word is in the Trie so return the word
             return lowerInputWord;
         }
-        
+
         // Generate the Candidate list with the Lowercase word
         generateCandidateList(lowerInputWord);
 
         // Create a Suggestion List
         generateSuggestionList();
+
         // If the suggestion list is only 1 element long then suggest that word
         if(suggestionList.size() == 1){
             return suggestionList.first();
         }
-
-        // FIXME call all the functions for edit distance 2
-        return null;
+        // We need to get a second edit distance
+        else if(suggestionList.size() == 0){
+            // copy the contents of the candidate words to a vector
+            Vector<String> myVector = new Vector<String>();
+            Iterator setItr = candidateList.iterator();
+            while (setItr.hasNext()){
+                myVector.add(setItr.next().toString());
+            }
+            // For each of the elements in the vector generate candidate words
+            for(int i = 0; i < myVector.size(); i++){
+                generateCandidateList(myVector.elementAt(i));
+            }
+            // Generate a suggestion list
+            generateSuggestionList();
+            // If there is only one word in the suggestion list return that word
+            if(suggestionList.size() == 1){
+                return suggestionList.first();
+            }
+            // else if there are no suggestions return null
+            else if(suggestionList.size() == 0){
+                return null;
+            }
+            else {
+                // Check the word count
+                return getSuggestion();
+            }
+        }
+        else {
+            // Check the word count
+            return getSuggestion();
+        }
     }
 
     public void deleteEditDistance(String inputWord){
@@ -202,5 +231,30 @@ public class SpellCorrector implements ISpellCorrector{
         transpositionEditDistance(lowerInputWord);
         alterationEditDistance(lowerInputWord);
         insertionEditDistance(lowerInputWord);
+    }
+
+    // Check all the counts for the suggestions and return the highest count
+    public String getSuggestion(){
+        Iterator suggestionItr = suggestionList.iterator();
+        // Pull out the first word, node, and count from the set
+        String currentWord = suggestionItr.next().toString();
+        INode currentNode = myTrie.find(currentWord);
+        int currentValue = currentNode.getValue();
+        // While the is a next value in the iterator
+        while (suggestionItr.hasNext()) {
+            // Grab the temp values
+            String tempWord = suggestionItr.next().toString();
+            INode tempNode = myTrie.find(tempWord);
+            int tempValue = tempNode.getValue();
+            // If the temp count is greater then the current count
+            if (currentValue < tempValue) {
+                // Replace the current node, count, and word
+                currentNode = tempNode;
+                currentValue = tempValue;
+                currentWord = tempWord;
+            }
+        }
+        // Return the word with the highest count
+        return currentWord;
     }
 }
