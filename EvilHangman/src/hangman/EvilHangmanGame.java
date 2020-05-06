@@ -77,12 +77,21 @@ public class EvilHangmanGame implements IEvilHangmanGame{
             if(!tempPattern.contains(Character.toString(guess))){
                 // set the possible words to the set of words and return them
                 possibleWords = entry.getValue();
+                return possibleWords;
                 //System.out.print("Has a key that does not contain the letters" + "\n");
             }
             //System.out.print("Only has patterns that contain the letter" + "\n");
         }
+        // Reset the tempPattern
+        tempPattern = "";
         // Check for the least occurrences of the guess in the pattern
+        tempPattern = getLeastOccurrences(guess);
 
+        if(tempPattern != ""){
+            // set the possible words and return them
+            possibleWords = wordPartitions.get(tempPattern);
+            return possibleWords;
+        }
 
         return possibleWords;
     }
@@ -146,6 +155,33 @@ public class EvilHangmanGame implements IEvilHangmanGame{
             }
         }
 
+        return tempPattern;
+    }
+
+    public String getLeastOccurrences(char guess){
+        int numOccurerences = 0;
+        String tempPattern = "";
+        // Check for least occurrences
+        for (Map.Entry<String,Set<String>> entry : wordPartitions.entrySet()){
+            String tempKey = entry.getKey();
+            int tempOccurrences = 0;
+            for(int i = 0; i < tempKey.length(); i++){
+                // Each time the guess is found in the word increase the temp count
+                if(tempKey.charAt(i) == guess){
+                    tempOccurrences++;
+                }
+            }
+            // if the number of occurrences is zero then set the occurrences
+            if(numOccurerences == 0){
+                tempPattern = tempKey;
+                numOccurerences = tempOccurrences;
+            }
+            // the current pattern has less of the guessed letter
+            if(numOccurerences > tempOccurrences){
+                tempPattern = tempKey;
+                numOccurerences = tempOccurrences;
+            }
+        }
         return tempPattern;
     }
 
