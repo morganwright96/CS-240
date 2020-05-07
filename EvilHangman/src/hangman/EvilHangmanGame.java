@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.util.*;
 
 public class EvilHangmanGame implements IEvilHangmanGame{
-    SortedSet<Character> guessedLetters = new TreeSet<>();
-    Set<String> possibleWords = new TreeSet<>();
-    Map<String, Set<String>> wordPartitions = new TreeMap<>();
+    private SortedSet<Character> guessedLetters = new TreeSet<>();
+    private Set<String> possibleWords = new TreeSet<>();
+    private Map<String, Set<String>> wordPartitions = new TreeMap<>();
+    String wordPattern = "";
 
     @Override
     public void startGame(File dictionary, int wordLength) throws IOException, EmptyDictionaryException {
@@ -17,7 +18,7 @@ public class EvilHangmanGame implements IEvilHangmanGame{
         wordPartitions.clear();
         try {
             if (dictionary.length() == 0) {
-                throw new EmptyDictionaryException("The dictionary is empty");
+                throw new EmptyDictionaryException("The dictionary is empty. Please use a valid dictionary");
             }
             if (wordLength <= 0){
                 throw new EmptyDictionaryException("The word length can't be negative or zero");
@@ -48,13 +49,14 @@ public class EvilHangmanGame implements IEvilHangmanGame{
 
     @Override
     public Set<String> makeGuess(char guess) throws GuessAlreadyMadeException {
-        // Start with clear partitions for each guess
+        // Start with clear partitions and word for each guess
         wordPartitions.clear();
+        wordPattern = "";
         // Make sure that the character is lowercase
         guess = Character.toLowerCase(guess);
         // If the user has already made a guess
         if(guessedLetters.contains(guess)){
-            throw new GuessAlreadyMadeException("You have already made this guess");
+            throw new GuessAlreadyMadeException("You have already made this guess!");
         }
         guessedLetters.add(guess);
 
@@ -67,6 +69,7 @@ public class EvilHangmanGame implements IEvilHangmanGame{
         if(tempPattern != ""){
             // set the possible words and return them
             possibleWords = wordPartitions.get(tempPattern);
+            wordPattern = tempPattern;
             return possibleWords;
         }
 
@@ -77,6 +80,7 @@ public class EvilHangmanGame implements IEvilHangmanGame{
             if(!tempPattern.contains(Character.toString(guess))){
                 // set the possible words to the set of words and return them
                 possibleWords = entry.getValue();
+                wordPattern = entry.getKey();
                 return possibleWords;
                 //System.out.print("Has a key that does not contain the letters" + "\n");
             }
@@ -90,6 +94,7 @@ public class EvilHangmanGame implements IEvilHangmanGame{
         if(tempPattern != ""){
             // set the possible words and return them
             possibleWords = wordPartitions.get(tempPattern);
+            wordPattern = tempPattern;
             return possibleWords;
         }
 
@@ -185,4 +190,13 @@ public class EvilHangmanGame implements IEvilHangmanGame{
         return tempPattern;
     }
 
+    public String getWordPattern() {
+        return wordPattern;
+    }
+
+    public String getFirstWord(){
+        // Return the first word in the possible words
+        Iterator setItr = possibleWords.iterator();
+        return setItr.next().toString();
+    }
 }

@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="c0ae34da-9d0e-49a6-a217-1f2f2f5cd782" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hangman/EvilHangman.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/hangman/EvilHangman.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hangman/EvilHangmanGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/hangman/EvilHangmanGame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -131,8 +147,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.HangmanTest" />
         <item itemvalue="Application.EvilHangman" />
+        <item itemvalue="JUnit.HangmanTest" />
         <item itemvalue="JUnit.HangmanTest.testRightmostLetter" />
         <item itemvalue="JUnit.HangmanTest.testRightmostOfMultipleInstances" />
         <item itemvalue="JUnit.HangmanTest.testFewestInstances" />
@@ -155,6 +171,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="WindowStateProjectService">
     <state x="535" y="64" key="#EvilHangman" timestamp="1588797325933">
