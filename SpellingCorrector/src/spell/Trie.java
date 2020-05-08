@@ -1,11 +1,15 @@
 package spell;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 public class Trie implements ITrie{
     private int hashCodeVal = 0;
     private Node root = new Node();
     private int nodeCount = 1;
     private int wordCount = 0;
     private StringBuilder wordList = new StringBuilder("");
+
     private boolean isEqual = true;
 
     @Override
@@ -80,7 +84,7 @@ public class Trie implements ITrie{
                 continue;
             }
             // Add teh letter and call the helper function
-            currentWord.append(getIndexCharacter(i));
+            currentWord.append(Character.toString(i + 'a'));
             toStringHelper(currentWord, root.nodeList[i]);
             // Reset the current word
             currentWord.setLength(0);
@@ -105,14 +109,14 @@ public class Trie implements ITrie{
                 continue;
             }
             // else add the character to the current word and call the toStringHelper function
-            currentWord.append(getIndexCharacter(i));
+            currentWord.append(Character.toString(i + 'a'));
             toStringHelper(currentWord, currentNode.nodeList[i]);
         }
         // Remove the last character from current word
         currentWord.setLength(currentWord.length() - 1);
     }
 
-    public char getIndexCharacter(int index){
+    /*public char getIndexCharacter(int index){
         // Used to convert an index into a letter to build the word
         switch (index){
             case 0:
@@ -170,7 +174,7 @@ public class Trie implements ITrie{
             default:
                 return '0';
         }
-    }
+    }*/
 
     @Override
     public int hashCode() {
