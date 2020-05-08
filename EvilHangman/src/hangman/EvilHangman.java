@@ -36,9 +36,9 @@ public class EvilHangman {
         Scanner in = new Scanner(System.in);
         String userInput = "";
         // Initialize a word with no characters
-        StringBuilder wordPattern = new StringBuilder();
+        StringBuilder currentWord = new StringBuilder();
         for (int i = 0; i < wordLength; i++){
-            wordPattern.append("_");
+            currentWord.append("_");
         }
 
         // Until the user runs out of guesses or there is a completed word
@@ -50,7 +50,7 @@ public class EvilHangman {
                     .replace("[", "")
                     .replace("]", "") + "\n");
             // Print the representation of the word
-            System.out.print("Word: " + wordPattern + "\n");
+            System.out.print("Word: " + currentWord + "\n");
 
             // Allow the user to guess a letter
             System.out.print("Enter a Guess: ");
@@ -101,14 +101,14 @@ public class EvilHangman {
                 i++;
                 continue;
             }
-            // add any letters to the word pattern
+
             String tempPattern = newGame.getWordPattern();
             if(tempPattern.contains(userInput)){
                 int letterCount = 0;
                 for(int j = 0; j < tempPattern.length(); j++){
                     if(tempPattern.charAt(j) != '_'){
                         // Replace the underscore with the guessed letter increase the count
-                        wordPattern.replace(j,j+1,Character.toString(tempPattern.charAt(j)));
+                        currentWord.replace(j,j+1,Character.toString(tempPattern.charAt(j)));
                         letterCount++;
                     }
                 }
@@ -121,12 +121,10 @@ public class EvilHangman {
                 // Say that it did not contain the letter
                 System.out.print("Sorry, there are no " + userInput + "\'s\n");
             }
-            // If there is no underscore left in the word
-            if(!wordPattern.toString().contains("_")){
-                System.out.print("You win the word was: " + wordPattern + "\n");
+            if(!currentWord.toString().contains("_")){
+                System.out.print("You win! The word was: " + currentWord + "\n");
                 return;
             }
-
             if(i == 1){
                 System.out.print("You lose!\nThe word was: " + newGame.getFirstWord());
             }

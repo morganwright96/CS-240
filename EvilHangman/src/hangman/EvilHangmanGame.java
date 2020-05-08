@@ -8,7 +8,7 @@ public class EvilHangmanGame implements IEvilHangmanGame{
     private SortedSet<Character> guessedLetters = new TreeSet<>();
     private Set<String> possibleWords = new TreeSet<>();
     private Map<String, Set<String>> wordPartitions = new TreeMap<>();
-    String wordPattern = "";
+    String currentPattern = "";
 
     @Override
     public void startGame(File dictionary, int wordLength) throws IOException, EmptyDictionaryException {
@@ -49,52 +49,51 @@ public class EvilHangmanGame implements IEvilHangmanGame{
 
     @Override
     public Set<String> makeGuess(char guess) throws GuessAlreadyMadeException {
-        // Start with clear partitions and word for each guess
         wordPartitions.clear();
-        wordPattern = "";
-        // Make sure that the character is lowercase
+        currentPattern = "";
         guess = Character.toLowerCase(guess);
-        // If the user has already made a guess
+
+        // Check to see if the user has already guessed this char
         if(guessedLetters.contains(guess)){
-            throw new GuessAlreadyMadeException("You have already made this guess!");
+            throw new GuessAlreadyMadeException("You have already guessed this letter");
         }
+        // Add the letter to the guessed letter set
         guessedLetters.add(guess);
 
         // Generate the partitions
         generatePartitions(guess);
 
-        // Find the largest set if there is one
-        String tempPattern = getLargestSet();
-        // If there is a set with the largest word count
-        if(tempPattern != ""){
-            // set the possible words and return them
-            possibleWords = wordPartitions.get(tempPattern);
-            wordPattern = tempPattern;
+        // Check to see if any given set is larger then the rest
+        currentPattern = getLargestSet();
+        // If the current pattern is not empty
+        if(currentPattern != ""){
+            // Return the set with the given pattern
+            possibleWords = wordPartitions.get(currentPattern);
             return possibleWords;
         }
 
-        // Check to see if any of the patterns contain the guessed letter
-        for (Map.Entry<String,Set<String>> entry : wordPartitions.entrySet()){
-            tempPattern = entry.getKey();
-            // If there is a pattern that does not have the guessed letter
-            if(!tempPattern.contains(Character.toString(guess))){
-                // set the possible words to the set of words and return them
-                possibleWords = entry.getValue();
-                wordPattern = entry.getKey();
+        // Check to see if any key does not contain the guess
+        for(Map.Entry<String,Set<String>> entry : wordPartitions.entrySet()){
+            // If there is a key that does not contain the value
+            if (!entry.getKey().contains(Character.toString(guess))){
+                possibleWords = wordPartitions.get(entry.getKey());
                 return possibleWords;
-                //System.out.print("Has a key that does not contain the letters" + "\n");
             }
-            //System.out.print("Only has patterns that contain the letter" + "\n");
         }
-        // Reset the tempPattern
-        tempPattern = "";
-        // Check for the least occurrences of the guess in the pattern
-        tempPattern = getLeastOccurrences(guess);
 
-        if(tempPattern != ""){
-            // set the possible words and return them
-            possibleWords = wordPartitions.get(tempPattern);
-            wordPattern = tempPattern;
+        // Get the group with least number of occurrences
+        currentPattern = getLeastOccurrences(guess);
+        if(currentPattern != ""){
+            // Return the set with the given pattern
+            possibleWords = wordPartitions.get(currentPattern);
+            return possibleWords;
+        }
+
+        // Find the word list with the letter occurring in the rightmost position
+        currentPattern = getRightMostPattern(guess);
+        if(currentPattern != ""){
+            // Return the set with the given pattern
+            possibleWords = wordPartitions.get(currentPattern);
             return possibleWords;
         }
 
@@ -143,60 +142,99 @@ public class EvilHangmanGame implements IEvilHangmanGame{
     }
 
     public String getLargestSet(){
-
-        int wordCount = 0;
-        String tempPattern = "";
-        // Check for largest group
-        for (Map.Entry<String,Set<String>> entry : wordPartitions.entrySet()){
-            int tempCount = entry.getValue().size();
+        String currentPattern = "";
+        int currentSize = 0;
+        int tempSize = 0;
+        for(Map.Entry<String,Set<String>> entry : wordPartitions.entrySet()){
+            // Get the size of the set for a given key
+            tempSize = entry.getValue().size();
             // If the counts ever become equal then we need perform a different list determiner
-            if(tempCount == wordCount){
-                tempPattern = "";
-                break;
-            }
-            if(tempCount > wordCount){
-                wordCount = tempCount;
-                tempPattern = entry.getKey();
+            if(tempSize > currentSize){
+                currentPattern = entry.getKey();
+                currentSize = tempSize;
+                tempSize = 0;
             }
         }
+        if(currentSize == tempSize){
+            return "";
+        }
 
-        return tempPattern;
+        // Return the current pattern
+        return currentPattern;
     }
 
     public String getLeastOccurrences(char guess){
-        int numOccurerences = 0;
-        String tempPattern = "";
-        // Check for least occurrences
+        int currentCount = 0;
+        String currentPattern = "";
+
         for (Map.Entry<String,Set<String>> entry : wordPartitions.entrySet()){
-            String tempKey = entry.getKey();
-            int tempOccurrences = 0;
-            for(int i = 0; i < tempKey.length(); i++){
-                // Each time the guess is found in the word increase the temp count
-                if(tempKey.charAt(i) == guess){
-                    tempOccurrences++;
-                }
+            int tempCount = getOccurrences(entry.getKey(), guess);
+
+            // If there is ever an equal number of letters in the count
+            if(currentCount == tempCount){
+                return "";
             }
-            // if the number of occurrences is zero then set the occurrences
-            if(numOccurerences == 0){
-                tempPattern = tempKey;
-                numOccurerences = tempOccurrences;
+            // Get a count for the first entry in the map
+            if(currentCount == 0){
+                currentCount = tempCount;
+                currentPattern = entry.getKey();
             }
-            // the current pattern has less of the guessed letter
-            if(numOccurerences > tempOccurrences){
-                tempPattern = tempKey;
-                numOccurerences = tempOccurrences;
+            // Check to se if the temp count is less then the current
+            if(currentCount > tempCount){
+                currentCount = tempCount;
+                currentPattern = entry.getKey();
             }
         }
-        return tempPattern;
+        return currentPattern;
     }
 
-    public String getWordPattern() {
-        return wordPattern;
+    public int getOccurrences(String word, char guess){
+        int currentCount = 0;
+        for(int i = 0; i < word.length(); i++){
+            // Each time the guess is found in the word increase the temp count
+            if(word.charAt(i) == guess){
+                currentCount++;
+            }
+        }
+        return currentCount;
+    }
+
+    public String getRightMostPattern(char guess){
+        String currentPattern = "";
+        // For each of the patterns
+        for (Map.Entry<String,Set<String>> entry : wordPartitions.entrySet()){
+            String tempPattern = entry.getKey();
+            // Set the pattern on the first run to first entry
+            if(currentPattern == ""){
+                currentPattern = entry.getKey();
+                continue;
+            }
+            // Starting at the end of the pattern
+            for (int i = tempPattern.length(); i > 0; i--){
+                // If the patterns both have the guess in the given position
+                if(tempPattern.charAt(i-1) == currentPattern.charAt(i-1) && tempPattern.charAt(i-1) == guess){
+                    continue;
+                }
+                // Both are not the guess
+                // If the tempPattern has the guess in the given position
+                else if (tempPattern.charAt(i-1) == guess){
+                    currentPattern = tempPattern;
+                }
+                else {
+                    break;
+                }
+            }
+        }
+        return currentPattern;
+    }
+
+    public String getWordPattern(){
+        return currentPattern;
     }
 
     public String getFirstWord(){
-        // Return the first word in the possible words
         Iterator setItr = possibleWords.iterator();
         return setItr.next().toString();
     }
+
 }
