@@ -20,7 +20,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0ae34da-9d0e-49a6-a217-1f2f2f5cd782" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FamilyMap/FamilyMap/src/DAO/AuthTokenDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FamilyMap/FamilyMap/src/DAO/EventDat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FamilyMap/FamilyMap/src/DAO/PersonDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FamilyMap/FamilyMap/src/DAO/UserDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FamilyMap/FamilyMap/src/Model/AuthToken.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FamilyMap/FamilyMap/src/Model/Event.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FamilyMap/FamilyMap/src/Model/Person.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FamilyMap/FamilyMap/src/Model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FamilyMap/FamilyMap.db" beforeDir="false" afterPath="$PROJECT_DIR$/../FamilyMap/FamilyMap.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FamilyMap/familymap.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../FamilyMap/familymap.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,6 +191,7 @@
       <workItem from="1589253838102" duration="132000" />
       <workItem from="1589255467560" duration="3179000" />
       <workItem from="1589326608194" duration="175000" />
+      <workItem from="1589743523713" duration="17000" />
     </task>
     <servers />
   </component>
