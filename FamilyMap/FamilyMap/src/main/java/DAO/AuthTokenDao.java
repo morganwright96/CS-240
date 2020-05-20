@@ -26,10 +26,10 @@ public class AuthTokenDao {
 
     /**
      * This allows you to return the auth token for the given person
-     * @param personID The person needing an AuthToken
+     * @param authToken The person needing an AuthToken
      * @return The auth token
      */
-    public String getAuthToken(String personID){
+    public String getAuthToken(String authToken){
         return null;
     }
 }

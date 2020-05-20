@@ -7,9 +7,9 @@ CREATE TABLE "User" (
 	"UserName"	TEXT NOT NULL UNIQUE,
 	"Password"	TEXT NOT NULL,
 	"Email"	TEXT NOT NULL,
-	"First Name"	TEXT NOT NULL,
-	"Last Name"	TEXT NOT NULL,
-	"Person ID"	TEXT NOT NULL UNIQUE
+	"FirstName"	TEXT NOT NULL,
+	"LastName"	TEXT NOT NULL,
+	"PersonID"	TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE "AuthToken" (
@@ -18,24 +18,24 @@ CREATE TABLE "AuthToken" (
 );
 
 CREATE TABLE "Person" (
-	"Person ID"	TEXT NOT NULL PRIMARY KEY UNIQUE,
+	"PersonID"	TEXT NOT NULL PRIMARY KEY UNIQUE,
 	"Username"	TEXT NOT NULL,
-	"First Name"	TEXT NOT NULL,
-	"Last Name"	TEXT NOT NULL,
+	"FirstName"	TEXT NOT NULL,
+	"LastName"	TEXT NOT NULL,
 	"Gender"	TEXT NOT NULL,
-	"Father ID"	TEXT,
-	"Mother ID"	TEXT,
-	"Spouse ID"	TEXT,
+	"FatherID"	TEXT,
+	"MotherID"	TEXT,
+	"SpouseID"	TEXT,
 	FOREIGN KEY("Username") REFERENCES User(id),
-	FOREIGN KEY("Father ID") REFERENCES Person("Person ID"),
-	FOREIGN KEY("Mother ID") REFERENCES Person("Person ID"),	
-	FOREIGN KEY("Spouse ID") REFERENCES Person("Person ID")
+	FOREIGN KEY("FatherID") REFERENCES Person("PersonID"),
+	FOREIGN KEY("MotherID") REFERENCES Person("PersonID"),	
+	FOREIGN KEY("SpouseID") REFERENCES Person("PersonID")
 );
 
 CREATE TABLE "Event" (
-	"Event ID"	TEXT NOT NULL PRIMARY KEY UNIQUE,
+	"EventID"	TEXT NOT NULL PRIMARY KEY UNIQUE,
 	"Username"	TEXT NOT NULL,
-	"Person ID"	TEXT NOT NULL,
+	"PersonID"	TEXT NOT NULL,
 	"Latitude"	NUMERIC NOT NULL,
 	"Longitude"	NUMERIC NOT NULL,
 	"Country"	TEXT NOT NULL,

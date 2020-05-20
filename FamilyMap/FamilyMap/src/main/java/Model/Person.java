@@ -1,6 +1,8 @@
 package Model;
 
 
+import java.util.Objects;
+
 /**
  * This represents a basic person class
  * This class allows the creation of a person object
@@ -16,6 +18,29 @@ public class Person {
     private String FatherID = "";
     private String MotherID = "";
     private String SpouseID = "";
+
+    /**
+     * This constructs a new person with the given params
+     * @param personId The id for the new person
+     * @param username The username of the current user
+     * @param firstName The first name of the person
+     * @param lastName The last name of the person
+     * @param gender The gender of the person
+     * @param fatherID The person id for the father
+     * @param motherID The person id for the Mother
+     * @param spouseID The person id for the Spouse
+     */
+    public Person(String personId, String username, String firstName, String lastName,
+                  Character gender, String fatherID, String motherID, String spouseID) {
+        PersonId = personId;
+        Username = username;
+        FirstName = firstName;
+        LastName = lastName;
+        Gender = gender;
+        FatherID = fatherID;
+        MotherID = motherID;
+        SpouseID = spouseID;
+    }
 
     public String getPersonId() {
         return PersonId;
@@ -80,4 +105,20 @@ public class Person {
     public void setSpouseID(String spouseID) {
         SpouseID = spouseID;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(PersonId, person.PersonId) &&
+                Objects.equals(Username, person.Username) &&
+                Objects.equals(FirstName, person.FirstName) &&
+                Objects.equals(LastName, person.LastName) &&
+                Objects.equals(Gender, person.Gender) &&
+                Objects.equals(FatherID, person.FatherID) &&
+                Objects.equals(MotherID, person.MotherID) &&
+                Objects.equals(SpouseID, person.SpouseID);
+    }
+
 }

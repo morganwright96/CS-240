@@ -10,6 +10,16 @@ public class AuthToken {
     private String PersonID = "";
     private String AuthToken = "";
 
+    /**
+     * This creats an auth token for the given user
+     * @param personID The id of the user
+     * @param authToken The token for the user
+     */
+    public AuthToken(String personID, String authToken) {
+        PersonID = personID;
+        AuthToken = authToken;
+    }
+
     public String getPersonID() {
         return PersonID;
     }

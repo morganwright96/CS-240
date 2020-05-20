@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * This class supports the Insert, Delete, and Get methods
  */
 
-public class EventDat {
+public class EventDAO {
 
     /**
      * Create a new event and insert it into the event table

@@ -16,6 +16,32 @@ public class Event {
     private String EventType = "";
     private int Year = 0;
 
+    /**
+     * This creates an instance of an event with the given params
+     * @param eventID The id for the event
+     * @param username The username for the current user
+     * @param personID The id of the person that is linked to the event
+     * @param latitude The latitude of the event
+     * @param longitude The longitude of the event
+     * @param country The country the event occurred in
+     * @param city The city the event occurred in
+     * @param eventType The type of event baptism, christening, death, birth, etc.
+     * @param year The year the event occured
+     */
+
+    public Event(String eventID, String username, String personID, double latitude,
+                 double longitude, String country, String city, String eventType, int year) {
+        EventID = eventID;
+        Username = username;
+        PersonID = personID;
+        Latitude = latitude;
+        Longitude = longitude;
+        Country = country;
+        City = city;
+        EventType = eventType;
+        Year = year;
+    }
+
     public String getEventID() {
         return EventID;
     }
