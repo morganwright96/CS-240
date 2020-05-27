@@ -13,7 +13,7 @@ CREATE TABLE "User" (
 );
 
 CREATE TABLE "AuthToken" (
-	"Person ID"	TEXT NOT NULL,
+	"PersonID"	TEXT NOT NULL,
 	"AuthToken"	TEXT NOT NULL PRIMARY KEY UNIQUE
 );
 

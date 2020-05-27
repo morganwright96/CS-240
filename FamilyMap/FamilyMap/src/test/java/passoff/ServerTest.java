@@ -114,7 +114,7 @@ public class ServerTest {
             Assertions.assertNotNull(registerResult.d(), "userName was null OR its variable name did not match that of the expected JSon (see API)");
             Assertions.assertNotEquals(EMPTY_STRING, registerResult.d(), "userName was empty string, expected userName passed in with passoffrequest");
             Assertions.assertEquals(SHEILA.g(), registerResult.d(), "userName from Server does not match the requested userName");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -133,7 +133,7 @@ public class ServerTest {
             Assertions.assertNull(registerResult.e(), "personID was not null when it should have been (see API)");
             Assertions.assertNotNull(registerResult.b(), "message was null OR its variable name did not match that of the expected JSon (see API)");
             Assertions.assertTrue(registerResult.b().toLowerCase().contains("error"), "message did not contain 'error' string");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -154,7 +154,7 @@ public class ServerTest {
             Assertions.assertNotNull(loginResult.d(), "userName was null OR its variable name did not match that of the expected JSon (see API)");
             Assertions.assertNotEquals(EMPTY_STRING, loginResult.d(), "userName was empty string, expected userName passed in with passoffrequest");
             Assertions.assertEquals(SHEILA.g(), loginResult.d(), "userName from Server does not match the requested userName ");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -167,7 +167,7 @@ public class ServerTest {
             this.proxy.b(host, port, registerRequest);
             LoginResult loginResult = this.proxy.b(host, port, loginRequest2);
             b(loginResult);
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -183,7 +183,7 @@ public class ServerTest {
             this.proxy.b(host, port, registerRequest);
             LoginResult loginResult = this.proxy.b(host, port, loginRequest1);
             b(loginResult);
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -201,7 +201,7 @@ public class ServerTest {
             Assertions.assertEquals(registerRequest.c(), personResult.g(), "lastName of person returned does not match that of user's registration");
             Assertions.assertEquals(registerRequest.b(), personResult.b(), "gender of person returned does not match that of user's registration");
             Assertions.assertEquals(registerResult.d(), personResult.e(), "userName of person returned does not match that of user's registration");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -225,7 +225,7 @@ public class ServerTest {
             Assertions.assertNotNull(personResult.i(), "message was null OR its variable name did not match that of the expected JSon (see API)");
             Assertions.assertNotEquals(EMPTY_STRING, personResult.i(), "message was empty string, should have contained an error message");
             Assertions.assertTrue(personResult.i().toLowerCase().contains("error"), "message did not contain 'error' string");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -241,7 +241,7 @@ public class ServerTest {
             Assertions.assertNotNull(personResult.i(), "message was null OR its variable name did not match that of the expected JSon (see API)");
             Assertions.assertNotEquals(EMPTY_STRING, personResult.i(), "message was empty string, should have contained an error message");
             Assertions.assertTrue(personResult.i().toLowerCase().contains("error"), "message did not contain 'error' string");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -255,7 +255,7 @@ public class ServerTest {
             PersonsResult personsResult = this.proxy.d(host, port, registerResult.c());
             assertHTTP_OK();
             Assertions.assertNotNull(personsResult.c(registerResult.e()), "User's person not found in passoffresult");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -268,7 +268,7 @@ public class ServerTest {
             this.proxy.b(host, port, registerRequest);
             PersonsResult personsResult = this.proxy.d(host, port, "bad auth");
             b(personsResult);
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -290,7 +290,7 @@ public class ServerTest {
             assertHTTP_OK();
             Assertions.assertTrue((eventResult.g() == null || !eventResult.g().toLowerCase().contains("error")), "Result contains an error message");
             Assertions.assertEquals(loadRequest.d(ASTEROIDS2_EVENT_ID), eventResult.b(), "Event returned does not match event from LoadRequest");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         } catch (FileNotFoundException fileNotFoundException) {
             Assertions.fail("passoffFiles/LoadData.json not found in project root directory");
@@ -308,7 +308,7 @@ public class ServerTest {
             Assertions.assertNotNull(eventResult.g(), "message was null OR its variable name did not match that of the expected JSon (see API)");
             Assertions.assertNotEquals(EMPTY_STRING, eventResult.g(), "message was empty string, should have contained an error message");
             Assertions.assertTrue(eventResult.g().toLowerCase().contains("error"), "message did not contain 'error' string");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -322,7 +322,7 @@ public class ServerTest {
             LoginResult loginResult = this.proxy.b(host, port, loginRequest2);
             EventResult eventResult = this.proxy.b(host, port, loginResult.c(), ASTEROIDS1_EVENT_ID);
             b(eventResult);
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -336,7 +336,7 @@ public class ServerTest {
             EventsResult eventsResult = this.proxy.b(host, port, registerResult.c());
             assertHTTP_OK();
             Assertions.assertNotNull(eventsResult.b(registerResult.e(), BIRTH_EVENT), "Result does not contain User's birth");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -349,7 +349,7 @@ public class ServerTest {
             this.proxy.b(host, port, registerRequest);
             EventsResult eventsResult = this.proxy.b(host, port, "bad auth");
             b(eventsResult);
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -363,7 +363,7 @@ public class ServerTest {
             PersonsResult personsResult = this.proxy.d(host, port, registerResult.c());
             Person person = personsResult.c(registerResult.e());
             b(personsResult, person, "User", 3);
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -379,7 +379,7 @@ public class ServerTest {
             Person person = personsResult.c(registerResult.e());
             Assertions.assertNotNull(person, "User's Person not included in passoffresult");
             d(eventsResult, personsResult, person, "User", 3);
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -400,7 +400,7 @@ public class ServerTest {
             Assertions.assertNotNull(person3, "User's Mother's Person not included in passoffresult");
             b(eventsResult, personsResult, person3, "User's mother", 3);
             b(eventsResult, personsResult, person2, "User's father", 3);
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -416,7 +416,7 @@ public class ServerTest {
             Person person = personsResult.c(registerResult.e());
             Assertions.assertNotNull(person, "User's Person not included in passoffresult");
             c(eventsResult, personsResult, person, "User", 2);
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -440,7 +440,7 @@ public class ServerTest {
             Assertions.assertEquals(loadRequest.b(PATRICK.g()), personsResult.d(), "Persons of one user don't match loaded persons after a fill of a different user");
             EventsResult eventsResult = this.proxy.b(host, port, loginResult.c());
             Assertions.assertEquals(loadRequest.c(PATRICK.g()), eventsResult.d(), "Events of one user don't match loaded events after a fill of a different user");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         } catch (FileNotFoundException fileNotFoundException) {
             Assertions.fail(fileNotFoundException.getMessage());
@@ -466,7 +466,7 @@ public class ServerTest {
             Assertions.assertTrue((i <= Integer.parseInt(arrayOfString[1])), "Not enough people added");
             Assertions.assertEquals(" persons and ", arrayOfString[2], "Second part of passoffresult message does not match API");
             Assertions.assertTrue((j <= Integer.parseInt(arrayOfString[3])), "Not enough events added");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -490,7 +490,7 @@ public class ServerTest {
             Assertions.assertTrue((i <= Integer.parseInt(arrayOfString[1])), "Not enough people added");
             Assertions.assertEquals(" persons and ", arrayOfString[2], "Second part of passoffresult message does not match API");
             Assertions.assertTrue((j <= Integer.parseInt(arrayOfString[3])), "Not enough events added");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -514,7 +514,7 @@ public class ServerTest {
             Assertions.assertTrue((i <= Integer.parseInt(arrayOfString[1])), "Not enough people added");
             Assertions.assertEquals(" persons and ", arrayOfString[2], "Second part of passoffresult message does not match API");
             Assertions.assertTrue((j <= Integer.parseInt(arrayOfString[3])), "Not enough events added");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -544,7 +544,7 @@ public class ServerTest {
             Assertions.assertEquals(k, Integer.parseInt(arrayOfString[5]), "Incorrect number of events added");
         } catch (FileNotFoundException fileNotFoundException) {
             Assertions.fail("passoffFiles/LoadData.json not found in project root directory");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -569,7 +569,7 @@ public class ServerTest {
             Assertions.assertEquals(loadRequest.b(loginRequest2.b()), personsResult.d(), PATRICK.g() + "'s persons do not match those loaded");
         } catch (FileNotFoundException fileNotFoundException) {
             Assertions.fail("passoffFiles/LoadData.json not found in project root directory");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -595,7 +595,7 @@ public class ServerTest {
             personsResult = this.proxy.d(host, port, loginResult.c());
             Assertions.assertEquals(loadRequest.c(loginRequest2.b()), eventsResult.d(), PATRICK.g() + "'s events do not match those loaded");
             Assertions.assertEquals(loadRequest.b(loginRequest2.b()), personsResult.d(), PATRICK.g() + "'s persons do not match those loaded");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         } catch (FileNotFoundException fileNotFoundException) {
             Assertions.fail("passoffFiles/LoadData.json not found in project root directory");
@@ -622,7 +622,7 @@ public class ServerTest {
             b(personsResult);
             EventsResult eventsResult = this.proxy.b(host, port, loginResult1.c());
             b(eventsResult);
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -642,7 +642,7 @@ public class ServerTest {
             Assertions.assertNotNull(str1);
             Assertions.assertNotEquals(EMPTY_STRING, str1, "Default File Handler returned an empty file");
             Assertions.assertEquals(str, str1, "Default File Handler did not return correct file (index.html), or file contents do not exactly match provided file");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -662,7 +662,7 @@ public class ServerTest {
             Assertions.assertNotNull(str1);
             Assertions.assertNotEquals(EMPTY_STRING, str1, "File Handler returned an empty file");
             Assertions.assertEquals(str, str1, "File Handler did not return correct file, or file contents do not exactly match provided file");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -682,7 +682,7 @@ public class ServerTest {
             Assertions.assertNotNull(str1);
             Assertions.assertNotEquals(EMPTY_STRING, str1, "File Handler returned an empty file");
             Assertions.assertEquals(str, str1, "File Handler did not return correct file, or file contents do not exactly match provided file");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         }
     }
@@ -730,7 +730,7 @@ public class ServerTest {
             JsonReader jsonReader = new JsonReader(new FileReader("passoffFiles/LoadData.json"));
             LoadRequest loadRequest = (LoadRequest)GSON.fromJson(jsonReader, LoadRequest.class);
             this.proxy.b(host, port, loadRequest);
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
+        } catch (Client.ServerConnectionException serverConnectionException) {
             Assertions.fail(serverConnectionException.getMessage());
         } catch (FileNotFoundException fileNotFoundException) {
             Assertions.fail("passoffFiles/LoadData.json not found in project root directory");

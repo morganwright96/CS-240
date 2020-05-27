@@ -20,7 +20,7 @@ public class UserDAO {
      * This allows you to insert a new user into the table
      * @param newUser a user object created by the service package
      */
-    public void insert(User newUser) throws DataAccessException{
+    public void register(User newUser) throws DataAccessException{
         //We can structure our string to be similar to a sql command, but if we insert question
         //marks we can change them later with help from the statement
         String sql = "INSERT INTO User (UserName, Password, Email, FirstName , LastName, " +
@@ -38,7 +38,7 @@ public class UserDAO {
             // try to insert into the database
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("Error encountered while inserting into the database");
+            throw new DataAccessException("Error encountered while inserting a user into the database");
         }
     }
 
@@ -59,9 +59,35 @@ public class UserDAO {
      * This method compares the provided params with the database entry
      * @param username The username provided by the user
      * @param password The password provided by the user
-     * @return The auth token with the associated user if the user exists or param are correct
+     * @return The User to the service class
      */
-    public String login(String username, String password){
+    public User login(String username, String password) throws DataAccessException {
+        User user;
+        ResultSet rs = null;
+        String sql = "SELECT * FROM User WHERE UserName = ? AND Password = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setString(2,password);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                user = new User(rs.getString("UserName"), rs.getString("Password"),
+                        rs.getString("Email"), rs.getString("FirstName"), rs.getString("LastName"),
+                        rs.getString("PersonID"));
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while trying to find the user");
+        } finally {
+            if(rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
         return null;
     }
 

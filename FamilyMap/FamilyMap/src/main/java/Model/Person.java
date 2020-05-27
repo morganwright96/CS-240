@@ -1,6 +1,8 @@
 package Model;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Objects;
 
 /**
@@ -10,19 +12,20 @@ import java.util.Objects;
  */
 
 public class Person {
-    private String PersonId = "";
-    private String Username = "";
-    private String FirstName = "";
-    private String LastName = "";
-    private Character Gender = null;
-    private String FatherID = "";
-    private String MotherID = "";
-    private String SpouseID = "";
+    private String personID = "";
+    @SerializedName("associatedUsername")
+    private String userName = "";
+    private String firstName = "";
+    private String lastName = "";
+    private Character gender = null;
+    private String fatherID = "";
+    private String motherID = "";
+    private String spouseID = "";
 
     /**
      * This constructs a new person with the given params
-     * @param personId The id for the new person
-     * @param username The username of the current user
+     * @param personID The id for the new person
+     * @param userName The username of the current user
      * @param firstName The first name of the person
      * @param lastName The last name of the person
      * @param gender The gender of the person
@@ -30,80 +33,80 @@ public class Person {
      * @param motherID The person id for the Mother
      * @param spouseID The person id for the Spouse
      */
-    public Person(String personId, String username, String firstName, String lastName,
+    public Person(String personID, String userName, String firstName, String lastName,
                   Character gender, String fatherID, String motherID, String spouseID) {
-        PersonId = personId;
-        Username = username;
-        FirstName = firstName;
-        LastName = lastName;
-        Gender = gender;
-        FatherID = fatherID;
-        MotherID = motherID;
-        SpouseID = spouseID;
+        this.personID = personID;
+        this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.fatherID = fatherID;
+        this.motherID = motherID;
+        this.spouseID = spouseID;
     }
 
-    public String getPersonId() {
-        return PersonId;
+    public String getPersonID() {
+        return personID;
     }
 
-    public void setPersonId(String personId) {
-        PersonId = personId;
+    public void setPersonID(String personID) {
+        this.personID = personID;
     }
 
-    public String getUsername() {
-        return Username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        Username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-        FirstName = firstName;
+        this.firstName = firstName;
     }
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-        LastName = lastName;
+        this.lastName = lastName;
     }
 
     public Character getGender() {
-        return Gender;
+        return gender;
     }
 
     public void setGender(Character gender) {
-        Gender = gender;
+        this.gender = gender;
     }
 
     public String getFatherID() {
-        return FatherID;
+        return fatherID;
     }
 
     public void setFatherID(String fatherID) {
-        FatherID = fatherID;
+        this.fatherID = fatherID;
     }
 
     public String getMotherID() {
-        return MotherID;
+        return motherID;
     }
 
     public void setMotherID(String motherID) {
-        MotherID = motherID;
+        this.motherID = motherID;
     }
 
     public String getSpouseID() {
-        return SpouseID;
+        return spouseID;
     }
 
     public void setSpouseID(String spouseID) {
-        SpouseID = spouseID;
+        this.spouseID = spouseID;
     }
 
     @Override
@@ -111,14 +114,14 @@ public class Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(PersonId, person.PersonId) &&
-                Objects.equals(Username, person.Username) &&
-                Objects.equals(FirstName, person.FirstName) &&
-                Objects.equals(LastName, person.LastName) &&
-                Objects.equals(Gender, person.Gender) &&
-                Objects.equals(FatherID, person.FatherID) &&
-                Objects.equals(MotherID, person.MotherID) &&
-                Objects.equals(SpouseID, person.SpouseID);
+        return Objects.equals(personID, person.personID) &&
+                Objects.equals(userName, person.userName) &&
+                Objects.equals(firstName, person.firstName) &&
+                Objects.equals(lastName, person.lastName) &&
+                Objects.equals(gender, person.gender) &&
+                Objects.equals(fatherID, person.fatherID) &&
+                Objects.equals(motherID, person.motherID) &&
+                Objects.equals(spouseID, person.spouseID);
     }
 
 }

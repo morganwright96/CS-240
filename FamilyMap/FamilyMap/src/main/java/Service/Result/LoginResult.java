@@ -5,9 +5,9 @@ package Service.Result;
  */
 
 public class LoginResult extends Result {
-    private String authToken = "";
-    private String username = "";
-    private String personID = "";
+    private String authToken = null;
+    private String username = null;
+    private String personID = null;
 
     public String getAuthToken() {
         return authToken;

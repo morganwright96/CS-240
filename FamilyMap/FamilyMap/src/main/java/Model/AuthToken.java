@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.Objects;
+
 /**
  *  This is a basic AuthToken object
  *  This class represents a users authentication with the server
@@ -34,5 +36,14 @@ public class AuthToken {
 
     public void setAuthToken(String authToken) {
         AuthToken = authToken;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthToken authToken = (AuthToken) o;
+        return Objects.equals(PersonID, authToken.PersonID) &&
+                Objects.equals(AuthToken, authToken.AuthToken);
     }
 }

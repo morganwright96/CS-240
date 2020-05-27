@@ -1,19 +1,21 @@
 package Model;
 
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  *  This is the basic user object.
  *  This class represents the current logged in user for the application
  * */
 
 public class User {
-
-    private String Username = "";
-    private String Password = "";
-    private String Email = "";
-    private String FirstName = "";
-    private String LastName = "";
-    private String PersonID = "";
+    @SerializedName("userName")
+    private String username = "";
+    private String password = "";
+    private String email = "";
+    private String firstName = "";
+    private String lastName = "";
+    private String personID = "";
 
     /**
      * Creates a new user with the provided information
@@ -25,60 +27,60 @@ public class User {
      * @param personID The ID for the user
      */
     public User(String username, String password, String email, String firstName, String lastName, String personID) {
-        Username = username;
-        Password = password;
-        Email = email;
-        FirstName = firstName;
-        LastName = lastName;
-        PersonID = personID;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.personID = personID;
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public void setUsername(String username) {
-        Username = username;
+        this.username = username;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
     public void setPassword(String password) {
-        Password = password;
+        this.password = password;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-        FirstName = firstName;
+        this.firstName = firstName;
     }
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-        LastName = lastName;
+        this.lastName = lastName;
     }
 
     public String getPersonID() {
-        return PersonID;
+        return personID;
     }
 
     public void setPersonID(String personID) {
-        PersonID = personID;
+        this.personID = personID;
     }
 
     /**

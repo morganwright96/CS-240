@@ -1,3 +1,5 @@
+package DAOTests;
+
 import DAO.DataAccessException;
 import DAO.Database;
 import DAO.UserDAO;
@@ -32,7 +34,6 @@ public class UserDAOTest {
         uDao = new UserDAO(conn);
         //Let's clear the users table as well so any lingering data doesn't affect our tests
         uDao.clear();
-        uDao.insert(newUser);
     }
 
     @AfterEach
@@ -40,11 +41,12 @@ public class UserDAOTest {
         //Here we close the connection to the database file so it can be opened elsewhere.
         //We will leave commit to false because we have no need to save the changes to the database
         //between test cases
-        db.closeConnection(true);
+        db.closeConnection(false);
     }
 
     @Test
     public void insertPass() throws DataAccessException {
+        uDao.register(newUser);
         //So lets use a find method to get the event that we just put in back out
         User compareTest = uDao.find(newUser.getUsername());
         //First lets see if our find found anything at all. If it did then we know that if nothing
@@ -60,25 +62,25 @@ public class UserDAOTest {
     public void insertFail() throws DataAccessException {
         //lets do this test again but this time lets try to make it fail
         //if we call the method the first time it will insert it successfully
+        uDao.register(newUser);
         //but our sql table is set up so that "Username" must be unique. So trying to insert it
         //again will cause the method to throw an exception
         //Note: This call uses a lambda function. What a lambda function is is beyond the scope
         //of this class. All you need to know is that this line of code runs the code that
         //comes after the "()->" and expects it to throw an instance of the class in the first parameter.
-        assertThrows(DataAccessException.class, ()-> uDao.insert(newUser));
+        assertThrows(DataAccessException.class, ()-> uDao.register(newUser));
     }
 
     @Test
     public void clearPass() throws DataAccessException{
         // Try to find a user in the database if there is one then it fail
-        uDao.clear();
-        // Try to find a user in the database if there is one then it fail
-        assertNull(uDao.find(newUser.getUsername()));
+        assertNull(uDao.find(newUser.getUsername()), "There is a user in the database with the username") ;
     }
 
     @Test
     public void findPass() throws DataAccessException{
         // Try to find the user in the database
+        uDao.register(newUser);
         assertNotNull(uDao.find(newUser.getUsername()));
     }
 
@@ -86,6 +88,19 @@ public class UserDAOTest {
     public void findFail() throws DataAccessException{
         // Try to find the username in the database for the user that we created in setup
         // This should fail because we dont allow for null usernames
-        assertNull(uDao.find(null));
+        assertNull(uDao.find(""));
+    }
+
+    @Test
+    public void loginPass() throws DataAccessException{
+        // Try to get a user with the given username and password
+        uDao.register(newUser);
+        assertNotNull(uDao.login(newUser.getUsername(), newUser.getPassword()));
+    }
+
+    @Test
+    public void loginFail() throws DataAccessException{
+        uDao.register(newUser);
+        assertNull(uDao.login(newUser.getUsername(), ""));
     }
 }

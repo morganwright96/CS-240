@@ -5,7 +5,7 @@ package Service.Result;
  */
 public class Result {
 
-    private String message = "";
+    private String message = null;
     private boolean success = false;
 
     public String getMessage() {

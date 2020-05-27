@@ -4,15 +4,20 @@ package Service.Request;
  * This is the class for a login request
  */
 public class LoginRequest {
-    private String username = "";
+    private String userName = "";
     private String password = "";
 
-    public String getUsername() {
-        return username;
+    public LoginRequest(String username, String password) {
+        this.userName = username;
+        this.password = password;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {

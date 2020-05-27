@@ -15,6 +15,12 @@ public class LoadRequest {
     private ArrayList<Person> personList = new ArrayList<>();
     private ArrayList<Event> eventList = new ArrayList<>();
 
+    public LoadRequest(ArrayList<User> userList, ArrayList<Person> personList, ArrayList<Event> eventList) {
+        this.userList = userList;
+        this.personList = personList;
+        this.eventList = eventList;
+    }
+
     public ArrayList<User> getUserList() {
         return userList;
     }
