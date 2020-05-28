@@ -1,9 +1,12 @@
 package Service.Result;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * This class represents the result of getting a single person from the database
  */
 public class PersonResult  extends Result {
+    @SerializedName("associatedUsername")
     private String username = null;
     private String personID = null;
     private String firstName = null;

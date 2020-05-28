@@ -1,5 +1,6 @@
 package passoff;
 
+import Handlers.JsonEncoder;
 import client.Client;
 import client.Proxy;
 import com.google.gson.Gson;

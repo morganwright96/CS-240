@@ -1,17 +1,30 @@
 package Service.Result;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.Objects;
+
 /**
  * This is the response of getting a single event from the database
  */
 public class EventResult extends Result {
+    @SerializedName("eventID")
     private String eventID = null;
+    @SerializedName("associatedUsername")
     private String username = null;
+    @SerializedName("personID")
     private String personID = null;
+    @SerializedName("latitude")
     private double latitude = 0;
+    @SerializedName("longitude")
     private double longitude = 0;
+    @SerializedName("country")
     private String country = null;
+    @SerializedName("city")
     private String city = null;
+    @SerializedName("eventType")
     private String eventType = null;
+    @SerializedName("year")
     private int year = 0;
 
     public String getEventID() {
@@ -85,4 +98,5 @@ public class EventResult extends Result {
     public void setYear(int year) {
         this.year = year;
     }
+
 }

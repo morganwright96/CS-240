@@ -52,5 +52,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Maven: org.decimal4j:decimal4j:1.0.3" level="project" />
   </component>
 </module>

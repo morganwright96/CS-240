@@ -48,7 +48,7 @@ public class UserDAOTest {
     public void insertPass() throws DataAccessException {
         uDao.register(newUser);
         //So lets use a find method to get the event that we just put in back out
-        User compareTest = uDao.find(newUser.getUsername());
+        User compareTest = uDao.find(newUser.getUserName());
         //First lets see if our find found anything at all. If it did then we know that if nothing
         //else something was put into our database, since we cleared it in the beginning
         assertNotNull(compareTest);
@@ -74,14 +74,14 @@ public class UserDAOTest {
     @Test
     public void clearPass() throws DataAccessException{
         // Try to find a user in the database if there is one then it fail
-        assertNull(uDao.find(newUser.getUsername()), "There is a user in the database with the username") ;
+        assertNull(uDao.find(newUser.getUserName()), "There is a user in the database with the username") ;
     }
 
     @Test
     public void findPass() throws DataAccessException{
         // Try to find the user in the database
         uDao.register(newUser);
-        assertNotNull(uDao.find(newUser.getUsername()));
+        assertNotNull(uDao.find(newUser.getUserName()));
     }
 
     @Test
@@ -95,12 +95,12 @@ public class UserDAOTest {
     public void loginPass() throws DataAccessException{
         // Try to get a user with the given username and password
         uDao.register(newUser);
-        assertNotNull(uDao.login(newUser.getUsername(), newUser.getPassword()));
+        assertNotNull(uDao.login(newUser.getUserName(), newUser.getPassword()));
     }
 
     @Test
     public void loginFail() throws DataAccessException{
         uDao.register(newUser);
-        assertNull(uDao.login(newUser.getUsername(), ""));
+        assertNull(uDao.login(newUser.getUserName(), ""));
     }
 }

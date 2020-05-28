@@ -37,6 +37,11 @@
             <version>1</version>
             <systemPath>${basedir}/libs/FMSTestingObf.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>org.decimal4j</groupId>
+            <artifactId>decimal4j</artifactId>
+            <version>1.0.3</version>
+        </dependency>
     </dependencies>
 
 </project>

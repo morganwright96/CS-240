@@ -1,16 +1,13 @@
 package Model;
 
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  *  This is the basic user object.
  *  This class represents the current logged in user for the application
  * */
 
 public class User {
-    @SerializedName("userName")
-    private String username;
+    private String userName;
     private String password;
     private String email;
     private String firstName;
@@ -27,7 +24,7 @@ public class User {
      * @param personID The ID for the user
      */
     public User(String username, String password, String email, String firstName, String lastName, String personID) {
-        this.username = username;
+        this.userName = username;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
@@ -35,12 +32,12 @@ public class User {
         this.personID = personID;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
@@ -95,7 +92,7 @@ public class User {
             return false;
         if (o instanceof User) {
             User oUser = (User) o;
-            return oUser.getUsername().equals(getUsername()) &&
+            return oUser.getUserName().equals(getUserName()) &&
                     oUser.getPassword().equals(getPassword()) &&
                     oUser.getEmail().equals(getEmail()) &&
                     oUser.getFirstName().equals(getFirstName()) &&

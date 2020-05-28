@@ -86,7 +86,7 @@ public class EventDAO {
             rs = stmt.executeQuery();
             if (rs.next()) {
                 event = new Event(rs.getString("EventID"), rs.getString("Username"),
-                        rs.getString("PersonID"), rs.getFloat("Latitude"), rs.getFloat("Longitude"),
+                        rs.getString("PersonID"), rs.getDouble("Latitude"), rs.getDouble("Longitude"),
                         rs.getString("Country"), rs.getString("City"), rs.getString("EventType"),
                         rs.getInt("Year"));
                 return event;
@@ -122,7 +122,7 @@ public class EventDAO {
             rs = stmt.executeQuery();
             while (rs.next()){
                 event = new Event(rs.getString("EventID"), rs.getString("Username"),
-                        rs.getString("PersonID"), rs.getFloat("Latitude"), rs.getFloat("Longitude"),
+                        rs.getString("PersonID"), rs.getDouble("Latitude"), rs.getDouble("Longitude"),
                         rs.getString("Country"), rs.getString("City"), rs.getString("EventType"),
                         rs.getInt("Year"));
                 eventList.add(event);

@@ -14,9 +14,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
+import org.decimal4j.util.DoubleRounder;
 
 import java.io.FileReader;
+import java.math.RoundingMode;
 import java.sql.Connection;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -75,16 +78,16 @@ public class Services {
             if(user == null){
                 user = new User(r.getUsername(), r.getPassword(), r.getEmail(), r.getFirstName(), r.getLastName(), uuidGenerator.getUuid());
                 userDAO.register(user);
-                rootPerson = new Person(user.getPersonID(), user.getUsername(), user.getFirstName(), user.getLastName(), r.getGender(), null, null, null);
+                rootPerson = new Person(user.getPersonID(), user.getUserName(), user.getFirstName(), user.getLastName(), r.getGender(), null, null, null);
                 personDAO.insert(rootPerson);
-                LoginRequest loginRequest = new LoginRequest(user.getUsername(), user.getPassword());
+                LoginRequest loginRequest = new LoginRequest(user.getUserName(), user.getPassword());
                 LoginResult loginResult = login(loginRequest);
                 if(loginResult.isSuccess()){
-                    FillResult fillResult = fill(user.getUsername(), 4);
+                    FillResult fillResult = fill(user.getUserName(), 4);
                     if(fillResult.isSuccess()){
                         registerResult.setAuthToken(loginResult.getAuthToken());
                         registerResult.setPersonID(rootPerson.getPersonID());
-                        registerResult.setUsername(user.getUsername());
+                        registerResult.setUsername(user.getUserName());
                         registerResult.setSuccess(true);
                     }
                     else {
@@ -117,7 +120,7 @@ public class Services {
             User loginUser = userDAO.login(r.getUserName(), r.getPassword());
             if(loginUser != null){
                 loginResult.setSuccess(true);
-                loginResult.setUsername(loginUser.getUsername());
+                loginResult.setUsername(loginUser.getUserName());
                 loginResult.setPersonID(loginUser.getPersonID());
 
                 AuthToken token = authTokenDAO.getAuthToken(loginUser.getPersonID());
@@ -204,8 +207,8 @@ public class Services {
 
             // The user should be 10 years old to use the application but not over 120
             int age = random.nextInt((120-10) + 1) + 10;
-            Event birthEvent = new Event(uuidGenerator.getUuid(), user.getUsername(), user.getPersonID(), eventJson.get("latitude").getAsFloat(),
-                    eventJson.get("longitude").getAsFloat(), eventJson.get("country").toString(), eventJson.get("city").toString(),"birth" ,year - age);
+            Event birthEvent = new Event(uuidGenerator.getUuid(), user.getUserName(), user.getPersonID(), eventJson.get("latitude").getAsDouble(),
+                    eventJson.get("longitude").getAsDouble(), eventJson.get("country").toString(), eventJson.get("city").toString(),"birth" ,year - age);
 
             if(generations == 0){
                 personDAO.insert(rootPerson);
@@ -215,7 +218,7 @@ public class Services {
                 return fillResult;
             }
             numGenGenerated = 0;
-            generateGenerations(generations, rootPerson, birthEvent.getYear());
+            generateGenerations(generations, rootPerson, year - age);
 
             personDAO.insert(rootPerson);
             eventDAO.insert(birthEvent);
@@ -422,11 +425,11 @@ public class Services {
             // Generate the marriage events
             int marriageYear = genMarriageYear(momBirth.getYear(), dadBirth.getYear());
             JsonObject marriageLocation = getLocationInfo();
-            Event momMarriage = new Event(uuidGenerator.getUuid(), mom.getUserName(), mom.getPersonID(), marriageLocation.get("latitude").getAsFloat(),
-                    marriageLocation.get("longitude").getAsFloat(), marriageLocation.get("country").toString(), marriageLocation.get("city").toString(),"marriage" ,marriageYear);
+            Event momMarriage = new Event(uuidGenerator.getUuid(), mom.getUserName(), mom.getPersonID(), marriageLocation.get("latitude").getAsDouble(),
+                    marriageLocation.get("longitude").getAsDouble(), marriageLocation.get("country").toString(), marriageLocation.get("city").toString(),"marriage" ,marriageYear);
             numEventsAdded++;
-            Event dadMarriage = new Event(uuidGenerator.getUuid(), dad.getUserName(), dad.getPersonID(), marriageLocation.get("latitude").getAsFloat(),
-                    marriageLocation.get("longitude").getAsFloat(), marriageLocation.get("country").toString(), marriageLocation.get("city").toString(),"marriage" ,marriageYear);
+            Event dadMarriage = new Event(uuidGenerator.getUuid(), dad.getUserName(), dad.getPersonID(), marriageLocation.get("latitude").getAsDouble(),
+                    marriageLocation.get("longitude").getAsDouble(), marriageLocation.get("country").toString(), marriageLocation.get("city").toString(),"marriage" ,marriageYear);
             numEventsAdded++;
             eventDAO.insert(momMarriage);
             eventDAO.insert(dadMarriage);
@@ -435,24 +438,24 @@ public class Services {
             JsonObject deathJson = getLocationInfo();
 
             int deathAge = getDeathYear(momMarriage, currentYear, momBirth);
-            Event momsDeathEvent = new Event(uuidGenerator.getUuid(), mom.getUserName(), mom.getPersonID(), deathJson.get("latitude").getAsFloat(),
-                    deathJson.get("longitude").getAsFloat(), deathJson.get("country").toString(), deathJson.get("city").toString(),"death", momBirth.getYear() + deathAge);
+            Event momsDeathEvent = new Event(uuidGenerator.getUuid(), mom.getUserName(), mom.getPersonID(), deathJson.get("latitude").getAsDouble(),
+                    deathJson.get("longitude").getAsDouble(), deathJson.get("country").toString(), deathJson.get("city").toString(),"death", momBirth.getYear() + deathAge);
             eventDAO.insert(momsDeathEvent);
             numEventsAdded++;
 
             deathJson = getLocationInfo();
             deathAge = getDeathYear(dadMarriage, currentYear, dadBirth);
-            Event dadsDeathEvent = new Event(uuidGenerator.getUuid(), dad.getUserName(), dad.getPersonID(), deathJson.get("latitude").getAsFloat(),
-                    deathJson.get("longitude").getAsFloat(), deathJson.get("country").toString(), deathJson.get("city").toString(),"death", dadBirth.getYear() + deathAge);
+            Event dadsDeathEvent = new Event(uuidGenerator.getUuid(), dad.getUserName(), dad.getPersonID(), deathJson.get("latitude").getAsDouble(),
+                    deathJson.get("longitude").getAsDouble(), deathJson.get("country").toString(), deathJson.get("city").toString(),"death", dadBirth.getYear() + deathAge);
             eventDAO.insert(dadsDeathEvent);
             numEventsAdded++;
 
             // Recursive call for the number of generations
             numGenGenerated++;
             currentYear = momBirth.getYear();
-            generateGenerations(generations, mom, currentYear);
+            generateGenerations(generations, mom, momBirth.getYear());
             personDAO.insert(mom);
-            generateGenerations(generations, dad, currentYear);
+            generateGenerations(generations, dad, dadBirth.getYear());
             personDAO.insert(dad);
             numGenGenerated--;
         } catch (DataAccessException e) {
@@ -473,9 +476,10 @@ public class Services {
 
     public Event genBirthEvent(Person currentPerson, int currentYear){
         int birthAge = getBirthAge();
+        System.out.print(birthAge);
         JsonObject eventJson = getLocationInfo();
-        return new Event(uuidGenerator.getUuid(), currentPerson.getUserName(), currentPerson.getPersonID(),eventJson.get("latitude").getAsFloat(),
-                eventJson.get("longitude").getAsFloat(), eventJson.get("country").toString(), eventJson.get("city").toString(),"birth" ,currentYear - birthAge);
+        return new Event(uuidGenerator.getUuid(), currentPerson.getUserName(), currentPerson.getPersonID(), eventJson.get("latitude").getAsDouble(),
+                eventJson.get("longitude").getAsDouble(), eventJson.get("country").toString(), eventJson.get("city").toString(),"birth" ,currentYear - birthAge);
     }
 
     public int getBirthAge(){
@@ -535,4 +539,5 @@ public class Services {
         AuthToken authToken = authTokenDAO.getAuthToken(token);
         return personDAO.getSinglePerson(authToken.getPersonID());
     }
+
 }

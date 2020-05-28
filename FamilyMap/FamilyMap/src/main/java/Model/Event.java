@@ -2,6 +2,8 @@ package Model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 /**
@@ -14,8 +16,8 @@ public class Event {
     @SerializedName("associatedUsername")
     private String userName = "";
     private String personID = "";
-    private float latitude = 0;
-    private float longitude = 0;
+    private double latitude = 0;
+    private double longitude = 0;
     private String country = "";
     private String city = "";
     private String eventType = "";
@@ -34,8 +36,8 @@ public class Event {
      * @param year The year the event occured
      */
 
-    public Event(String eventID, String userName, String personID, float latitude,
-                 float longitude, String country, String city, String eventType, int year) {
+    public Event(String eventID, String userName, String personID, double latitude,
+                 double longitude, String country, String city, String eventType, int year) {
         this.eventID = eventID;
         this.userName = userName;
         this.personID = personID;
@@ -75,7 +77,7 @@ public class Event {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
@@ -83,7 +85,8 @@ public class Event {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(double longitude) {
+
         this.longitude = longitude;
     }
 
@@ -119,19 +122,4 @@ public class Event {
         this.year = year;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return Double.compare(event.latitude, latitude) == 0 &&
-                Double.compare(event.longitude, longitude) == 0 &&
-                year == event.year &&
-                Objects.equals(eventID, event.eventID) &&
-                Objects.equals(userName, event.userName) &&
-                Objects.equals(personID, event.personID) &&
-                Objects.equals(country, event.country) &&
-                Objects.equals(city, event.city) &&
-                Objects.equals(eventType, event.eventType);
-    }
 }
