@@ -10,7 +10,7 @@ public class JsonEncoder {
     }
 
     public static <T> String serialize(Object o, Class<T> returnType) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
         return gson.toJson(o, returnType);
     }
 }

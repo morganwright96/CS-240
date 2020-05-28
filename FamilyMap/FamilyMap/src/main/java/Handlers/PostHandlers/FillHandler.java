@@ -19,7 +19,7 @@ public class FillHandler extends PostRequestHandler{
     public void handle(HttpExchange exchange) throws IOException {
         super.handle(exchange);
         try {
-            services = new Services();
+            services = new Services(getConn());
             URI uri = exchange.getRequestURI();
             String[] params = uri.getPath().split("/");
             if(params.length > 2 && params.length < 5){
@@ -27,26 +27,20 @@ public class FillHandler extends PostRequestHandler{
                 FillResult fillResult;
                 if(params.length == 4){
                     // Fill with a custom number of generations
-                    fillResult = services.fill(username, Integer.parseInt(params[3]), conn);
+                    fillResult = services.fill(username, Integer.parseInt(params[3]));
                 }
                 else {
                     // 4 is the default number of generations to fill
-                    fillResult = services.fill(username, 4, conn);
+                    fillResult = services.fill(username, 4);
                 }
                 findSuccess(exchange, fillResult);
             }
             else {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-                message = "Sorry, there was a problem tyring to fill with the provided information";
-                createResponse(message, false);
-                responseBodyWriter(exchange, respBody);
-                db.closeConnection(false);
+                getDb().closeConnection(false);
             }
         } catch (IOException | DataAccessException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-            message = "Sorry, we encountered an error trying to fill the database";
-            createResponse(message, false);
-            responseBodyWriter(exchange, respBody);
             e.printStackTrace();
         }
     }
@@ -54,20 +48,13 @@ public class FillHandler extends PostRequestHandler{
     private void findSuccess(HttpExchange exchange, FillResult fillResult) throws IOException, DataAccessException {
         if(fillResult.isSuccess()){
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-            db.closeConnection(true);
+            getDb().closeConnection(true);
         }
         else{
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-            db.closeConnection(false);
+            getDb().closeConnection(false);
         }
         respBody = JsonEncoder.serialize(fillResult, FillResult.class);
         responseBodyWriter(exchange, respBody);
-    }
-
-    public void createResponse(String message, boolean success){
-        FillResult fillResult = new FillResult();
-        fillResult.setMessage(message);
-        fillResult.setSuccess(success);
-        respBody = JsonEncoder.serialize(fillResult, FillResult.class);
     }
 }

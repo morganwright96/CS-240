@@ -17,22 +17,19 @@ public class ClearHandler extends PostRequestHandler {
     public void handle(HttpExchange exchange) throws IOException {
         try {
             super.handle(exchange);
-
-            Services services = new Services();
-            ClearResult clearResult = services.clear(conn);
+            Services services = new Services(getConn());
+            ClearResult clearResult = services.clear();
+            String respData = JsonEncoder.serialize(clearResult, ClearResult.class);
             if(clearResult.isSuccess()){
-                String respData = JsonEncoder.serialize(clearResult, ClearResult.class);
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                OutputStream respBody = exchange.getResponseBody();
-                respBody.write(respData.getBytes());
-                respBody.close();
-                db.closeConnection(true);
+                responseBodyWriter(exchange, respData);
+                getDb().closeConnection(true);
             }
             else {
-                db.closeConnection(false);
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                responseBodyWriter(exchange, respData);
+                getDb().closeConnection(false);
             }
-            exchange.getResponseBody().close();
         } catch (IOException e){
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             exchange.getResponseBody().close();

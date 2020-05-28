@@ -4,7 +4,7 @@ package Service.Request;
  * This class represents the request for a new registering user
  */
 public class RegisterRequest {
-    private String username = "";
+    private String userName = "";
     private String password = "";
     private String email = "";
     private String firstName = "";
@@ -12,11 +12,11 @@ public class RegisterRequest {
     private Character gender = null;
 
     public String getUsername() {
-        return username;
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {

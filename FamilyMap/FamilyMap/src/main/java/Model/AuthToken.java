@@ -9,8 +9,8 @@ import java.util.Objects;
  */
 
 public class AuthToken {
-    private String PersonID = "";
-    private String AuthToken = "";
+    private String PersonID;
+    private String AuthToken;
 
     /**
      * This creats an auth token for the given user

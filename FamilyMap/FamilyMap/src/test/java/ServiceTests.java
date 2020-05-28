@@ -40,7 +40,7 @@ public class ServiceTests {
     public void setUp() throws DataAccessException {
         db = new Database();
         conn = db.openConnection();
-        services = new Services();
+        services = new Services(conn);
     }
 
     @AfterEach
@@ -53,7 +53,7 @@ public class ServiceTests {
     @Test
     public void clearDatabasePass() throws DataAccessException {
         userDAO = new UserDAO(conn);
-        ClearResult clearResult = services.clear(conn);
+        ClearResult clearResult = services.clear();
         result = JsonEncoder.serialize(clearResult, ClearResult.class);
         ClearResult compareResult = new ClearResult();
         compareResult.setSuccess(true);
@@ -77,7 +77,7 @@ public class ServiceTests {
         people.add(person);
         events.add(event);
         LoadRequest loadRequest = new LoadRequest(users, people, events);
-        LoadResult loadResult = services.load(loadRequest, conn);
+        LoadResult loadResult = services.load(loadRequest);
         result = JsonEncoder.serialize(loadResult, LoadResult.class);
         LoadResult compareResult = new LoadResult();
         compareResult.setSuccess(true);
@@ -94,7 +94,7 @@ public class ServiceTests {
         ArrayList<Event> events = new ArrayList<>();
         // Try to add empty lists
         LoadRequest loadRequest = new LoadRequest(users, people, events);
-        LoadResult loadResult = services.load(loadRequest, conn);
+        LoadResult loadResult = services.load(loadRequest);
         result = JsonEncoder.serialize(loadResult, LoadResult.class);
         LoadResult compareResult = new LoadResult();
         compareResult.setSuccess(false);
@@ -110,7 +110,7 @@ public class ServiceTests {
         userDAO = new UserDAO(conn);
         userDAO.register(user);
         LoginRequest loginRequest = new LoginRequest("Morgan", "Wright");
-        LoginResult loginResult = services.login(loginRequest, conn);
+        LoginResult loginResult = services.login(loginRequest);
         result = JsonEncoder.serialize(loginResult, LoginResult.class);
         assertTrue(result.contains("Morgan"));
     }
@@ -121,11 +121,11 @@ public class ServiceTests {
         userDAO = new UserDAO(conn);
         userDAO.register(user);
         LoginRequest loginRequest = new LoginRequest("morgan", "BADPass");
-        LoginResult loginResult = services.login(loginRequest, conn);
+        LoginResult loginResult = services.login(loginRequest);
         result = JsonEncoder.serialize(loginResult, LoginResult.class);
         LoginResult compareResult = new LoginResult();
         compareResult.setSuccess(false);
-        compareResult.setMessage("The username or password was incorrect");
+        compareResult.setMessage("Error: The username or password provided was incorrect");
         compareString = JsonEncoder.serialize(compareResult, LoginResult.class);
         assertEquals(compareString, result);
     }

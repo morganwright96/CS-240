@@ -41,8 +41,8 @@ public class Event {
         this.personID = personID;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.country = country;
-        this.city = city;
+        this.country = country.replaceAll("\"", "");
+        this.city = city.replaceAll("\"", "");
         this.eventType = eventType;
         this.year = year;
     }

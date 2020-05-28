@@ -1,11 +1,14 @@
 package Service.Result;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * This class is the result of trying to login
  */
 
 public class LoginResult extends Result {
     private String authToken = null;
+    @SerializedName("userName")
     private String username = null;
     private String personID = null;
 

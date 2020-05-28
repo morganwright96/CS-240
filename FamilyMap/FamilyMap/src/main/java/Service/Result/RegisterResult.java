@@ -1,13 +1,16 @@
 package Service.Result;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  *  Represents the result for the register method
  *  This class extends the Response class
  */
 public class RegisterResult extends Result {
-    private String authToken = "";
-    private String username = "";
-    private String personID = "";
+    private String authToken = null;
+    @SerializedName("userName")
+    private String username = null;
+    private String personID = null;
 
     public String getAuthToken() {
         return authToken;

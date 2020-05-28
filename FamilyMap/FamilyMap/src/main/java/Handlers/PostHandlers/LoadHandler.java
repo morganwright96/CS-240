@@ -27,14 +27,14 @@ public class LoadHandler extends PostRequestHandler{
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
-            Services services = new Services();
-            OutputStream respBody = exchange.getResponseBody();
             super.handle(exchange);
-            ClearResult clearResult = services.clear(conn);
+            Services services = new Services(getConn());
+            OutputStream respBody = exchange.getResponseBody();
+            ClearResult clearResult = services.clear();
             if(clearResult.isSuccess()){
-                if(reqData.contains("users") && reqData.contains("persons") && reqData.contains("events")){
+                if(getReqData().contains("users") && getReqData().contains("persons") && getReqData().contains("events")){
                     Gson gson = new Gson();
-                    JsonObject jsonObject = gson.fromJson( reqData, JsonObject.class);
+                    JsonObject jsonObject = gson.fromJson( getReqData(), JsonObject.class);
                     JsonArray usersJson = jsonObject.get("users").getAsJsonArray(); // returns a JsonElement for that name
                     JsonArray peopleJson = jsonObject.get("persons").getAsJsonArray();
                     JsonArray eventsJson = jsonObject.get("events").getAsJsonArray();
@@ -54,37 +54,34 @@ public class LoadHandler extends PostRequestHandler{
                         events.add(newEvent);
                     }
                     LoadRequest loadRequest = new LoadRequest(users, people, events);
-                    LoadResult loadResult = services.load(loadRequest, conn);
+                    LoadResult loadResult = services.load(loadRequest);
+                    String respData = JsonEncoder.serialize(loadResult, LoadResult.class);
+
                     if(loadResult.isSuccess()){
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                        String respData = JsonEncoder.serialize(loadResult, LoadResult.class);
-                        respBody = exchange.getResponseBody();
-                        respBody.write(respData.getBytes());
-                        db.closeConnection(true);
+                        responseBodyWriter(exchange, respData);
+                        getDb().closeConnection(true);
                     }
                     else {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-                        String respData = JsonEncoder.serialize(loadResult, LoadResult.class);
-                        respBody = exchange.getResponseBody();
-                        respBody.write(respData.getBytes());
-                        db.closeConnection(false);
+                        responseBodyWriter(exchange, respData);
+                        getDb().closeConnection(false);
                     }
                 }
                 else{
-                    db.closeConnection(false);
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                    getDb().closeConnection(false);
                 }
             }
             else {
                 String respData = JsonEncoder.serialize(clearResult, ClearResult.class);
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                 responseBodyWriter(exchange, respData);
+                getDb().closeConnection(false);
             }
-            exchange.getResponseBody().close();
             users.clear();
             people.clear();
             events.clear();
-            respBody.close();
         } catch (IOException | DataAccessException e){
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             e.printStackTrace();

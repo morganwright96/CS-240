@@ -10,12 +10,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class User {
     @SerializedName("userName")
-    private String username = "";
-    private String password = "";
-    private String email = "";
-    private String firstName = "";
-    private String lastName = "";
-    private String personID = "";
+    private String username;
+    private String password;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String personID;
 
     /**
      * Creates a new user with the provided information

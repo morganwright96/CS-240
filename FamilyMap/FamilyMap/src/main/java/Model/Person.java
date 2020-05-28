@@ -18,9 +18,9 @@ public class Person {
     private String firstName = "";
     private String lastName = "";
     private Character gender = null;
-    private String fatherID = "";
-    private String motherID = "";
-    private String spouseID = "";
+    private String fatherID = null;
+    private String motherID = null;
+    private String spouseID = null;
 
     /**
      * This constructs a new person with the given params

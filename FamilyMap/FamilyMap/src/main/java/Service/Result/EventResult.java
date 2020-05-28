@@ -4,14 +4,14 @@ package Service.Result;
  * This is the response of getting a single event from the database
  */
 public class EventResult extends Result {
-    private String eventID = "";
-    private String username = "";
-    private String personID = "";
+    private String eventID = null;
+    private String username = null;
+    private String personID = null;
     private double latitude = 0;
     private double longitude = 0;
-    private String country = "";
-    private String city = "";
-    private String eventType = "";
+    private String country = null;
+    private String city = null;
+    private String eventType = null;
     private int year = 0;
 
     public String getEventID() {

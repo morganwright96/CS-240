@@ -49,15 +49,15 @@ public class AuthTokenDAO {
 
     /**
      * This allows you to return the auth token for the given person
-     * @param personID The person needing an AuthToken
+     * @param token The token needed to identify a person
      * @return The auth token
      */
-    public AuthToken getAuthToken(String personID) throws DataAccessException {
+    public AuthToken getAuthToken(String token) throws DataAccessException {
         AuthToken authToken;
         ResultSet rs = null;
-        String sql = "SELECT * FROM AuthToken WHERE PersonID = ?;";
+        String sql = "SELECT * FROM AuthToken WHERE AuthToken = ?;";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, personID);
+            stmt.setString(1, token);
             rs = stmt.executeQuery();
             if (rs.next()) {
                 authToken = new AuthToken(rs.getString("PersonID"), rs.getString("AuthToken"));
@@ -78,6 +78,4 @@ public class AuthTokenDAO {
         }
         return null;
     }
-
-
 }

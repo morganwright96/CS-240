@@ -4,14 +4,14 @@ package Service.Result;
  * This class represents the result of getting a single person from the database
  */
 public class PersonResult  extends Result {
-    private String username = "";
-    private String personID = "";
-    private String firstName = "";
-    private String lastName = "";
+    private String username = null;
+    private String personID = null;
+    private String firstName = null;
+    private String lastName = null;
     private Character gender = null;
-    private String fatherID = "";
-    private String motherID = "";
-    private String spouseID = "";
+    private String fatherID = null;
+    private String motherID = null;
+    private String spouseID = null;
 
     public String getUsername() {
         return username;

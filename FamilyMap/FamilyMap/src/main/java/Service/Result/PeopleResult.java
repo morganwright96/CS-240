@@ -8,14 +8,14 @@ import java.util.ArrayList;
  * This class is the result of getting all the people for the current user
  */
 
-public class PeopleResult {
-    private ArrayList<Person> peopleList = new ArrayList<>();
+public class PeopleResult extends Result{
+    private ArrayList<Person> data = new ArrayList<>();
 
-    public ArrayList<Person> getPeopleList() {
-        return peopleList;
+    public ArrayList<Person> getData() {
+        return data;
     }
 
-    public void setPeopleList(ArrayList<Person> peopleList) {
-        this.peopleList = peopleList;
+    public void setData(ArrayList<Person> data) {
+        this.data = data;
     }
 }

@@ -10,6 +10,7 @@ import Service.Request.LoginRequest;
 import Service.Request.RegisterRequest;
 import Service.Result.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
@@ -30,17 +31,25 @@ public class Services {
     int numGenGenerated = 0;
     int numPeopleAdded = 0;
     int numEventsAdded = 0;
-    PersonDao personDao;
-    EventDAO eventDAO;
+    Person rootPerson = null;
+    PersonDao personDAO = null;
+    EventDAO eventDAO = null;
+    UserDAO userDAO = null;
+    AuthTokenDAO authTokenDAO = null;
 
     ArrayList<JsonObject> locations = new ArrayList<>();
 
-    public Services() throws DataAccessException {
+    public Services(Connection conn) throws DataAccessException {
         try{
+            userDAO = new UserDAO(conn);
+            personDAO = new PersonDao(conn);
+            eventDAO = new EventDAO(conn);
+            authTokenDAO = new AuthTokenDAO(conn);
+
             Gson gson = new Gson();
             JsonReader reader = new JsonReader(new FileReader("json/fnames.json"));
             JsonObject jsonObject = gson.fromJson( reader, JsonObject.class);
-            JsonArray json = jsonObject.get("data").getAsJsonArray();
+            JsonArray json;
 
             reader = new JsonReader(new FileReader("json/locations.json"));
             jsonObject = gson.fromJson(reader, JsonObject.class);
@@ -60,7 +69,41 @@ public class Services {
      * @return The result of trying to add the user
      */
     public RegisterResult register(RegisterRequest r){
-        return null;
+        RegisterResult registerResult = new RegisterResult();
+        try {
+            User user = userDAO.find(r.getUsername());
+            if(user == null){
+                user = new User(r.getUsername(), r.getPassword(), r.getEmail(), r.getFirstName(), r.getLastName(), uuidGenerator.getUuid());
+                userDAO.register(user);
+                rootPerson = new Person(user.getPersonID(), user.getUsername(), user.getFirstName(), user.getLastName(), r.getGender(), null, null, null);
+                personDAO.insert(rootPerson);
+                LoginRequest loginRequest = new LoginRequest(user.getUsername(), user.getPassword());
+                LoginResult loginResult = login(loginRequest);
+                if(loginResult.isSuccess()){
+                    FillResult fillResult = fill(user.getUsername(), 4);
+                    if(fillResult.isSuccess()){
+                        registerResult.setAuthToken(loginResult.getAuthToken());
+                        registerResult.setPersonID(rootPerson.getPersonID());
+                        registerResult.setUsername(user.getUsername());
+                        registerResult.setSuccess(true);
+                    }
+                    else {
+                        registerResult.setMessage("Error: There was a problem trying to populate 4 generations of data");
+                    }
+                }
+                else {
+                    registerResult.setMessage("Error: There was a problem login in the user after registering");
+                }
+            }
+            else {
+                registerResult.setMessage("Error: There is already a user registered with that username.");
+            }
+
+        } catch (DataAccessException e) {
+            registerResult.setMessage("Error: There was a problem trying to access the database");
+            e.printStackTrace();
+        }
+        return registerResult;
     }
 
     /**
@@ -68,37 +111,33 @@ public class Services {
      * @param r  The login request
      * @return the result of tyring to login to the application
      */
-    public LoginResult login(LoginRequest r, Connection conn) throws DataAccessException {
+    public LoginResult login(LoginRequest r) throws DataAccessException {
         LoginResult loginResult = new LoginResult();
         try {
-            UserDAO userDAO = new UserDAO(conn);
             User loginUser = userDAO.login(r.getUserName(), r.getPassword());
             if(loginUser != null){
                 loginResult.setSuccess(true);
                 loginResult.setUsername(loginUser.getUsername());
                 loginResult.setPersonID(loginUser.getPersonID());
 
-                AuthTokenDAO authTokenDao = new AuthTokenDAO(conn);
-                AuthToken token = authTokenDao.getAuthToken(loginUser.getPersonID());
+                AuthToken token = authTokenDAO.getAuthToken(loginUser.getPersonID());
                 // If the user dose not have an existing token create one and add it to the database
                 if(token == null){
                     token = new AuthToken(loginUser.getPersonID(), uuidGenerator.getUuid());
-                    authTokenDao.insert(token);
+                    authTokenDAO.insert(token);
                 }
                 loginResult.setAuthToken(token.getAuthToken());
             }
             else {
-                loginResult.setMessage("The username or password was incorrect");
+                loginResult.setMessage("Error: The username or password provided was incorrect");
                 loginResult.setSuccess(false);
             }
 
         } catch (DataAccessException e) {
-            loginResult.setMessage("There was an error while trying to log you in");
+            loginResult.setMessage("Error: There was an error while trying to log you in");
             loginResult.setSuccess(false);
             e.printStackTrace();
         }
-
-
         return loginResult;
     }
 
@@ -106,20 +145,15 @@ public class Services {
      * This method does the logic for clearing the database of all information
      * @return the result of the clear
      */
-    public ClearResult clear(Connection conn) throws DataAccessException{
+    public ClearResult clear() throws DataAccessException{
         try {
-            // Open a connection for each of the DAO
-            UserDAO userDAO = new UserDAO(conn);
-            PersonDao personDao = new PersonDao(conn);
-            EventDAO eventDAO = new EventDAO(conn);
-            AuthTokenDAO authTokenDao = new AuthTokenDAO(conn);
-
             // Clear the Tables
             userDAO.clear();
-            personDao.clear();
+            personDAO.clear();
             eventDAO.clear();
-            authTokenDao.clear();
+            authTokenDAO.clear();
 
+            // FIXME need to add logic to check the is success
             ClearResult clearResult = new ClearResult();
             clearResult.setMessage("Clear succeeded");
             clearResult.setSuccess(true);
@@ -139,7 +173,7 @@ public class Services {
      * @param generations the number of generations we want to populate
      * @return The result of filling the database with information
      */
-    public FillResult fill(String username, int generations, Connection conn) throws DataAccessException {
+    public FillResult fill(String username, int generations) throws DataAccessException {
         FillResult fillResult = new FillResult();
         if(generations < 0){
             fillResult.setSuccess(false);
@@ -147,33 +181,34 @@ public class Services {
             return fillResult;
         }
         try {
-            UserDAO userDAO = new UserDAO(conn);
-            personDao = new PersonDao(conn);
-            eventDAO = new EventDAO(conn);
-
             User user = userDAO.find(username);
             if(user == null){
                 fillResult.setSuccess(false);
                 fillResult.setMessage("Sorry, but there was no user with that username");
                 return fillResult;
             }
+            Person tempPerson = personDAO.getSinglePerson(user.getPersonID());
 
-            Person rootPerson = personDao.getSinglePerson(user.getPersonID());
+            if(tempPerson != null && rootPerson == null){
+                rootPerson = tempPerson;
+            }
+
+            // rootPerson = personDAO.getSinglePerson(user.getPersonID());
             // Delete all info for the user that is logged in
-            personDao.delete(username);
+            personDAO.delete(username);
             eventDAO.delete(username);
 
             Random random = new Random();
             int year = Calendar.getInstance().get(Calendar.YEAR);
             JsonObject eventJson = getLocationInfo();
 
-            // The user should be 10 years old to use the application
+            // The user should be 10 years old to use the application but not over 120
             int age = random.nextInt((120-10) + 1) + 10;
-            Event birthEvent = new Event(uuidGenerator.getUuid(), rootPerson.getUserName(), rootPerson.getPersonID(), eventJson.get("latitude").getAsFloat(),
+            Event birthEvent = new Event(uuidGenerator.getUuid(), user.getUsername(), user.getPersonID(), eventJson.get("latitude").getAsFloat(),
                     eventJson.get("longitude").getAsFloat(), eventJson.get("country").toString(), eventJson.get("city").toString(),"birth" ,year - age);
 
             if(generations == 0){
-                personDao.insert(rootPerson);
+                personDAO.insert(rootPerson);
                 eventDAO.insert(birthEvent);
                 fillResult.setMessage("Successfully added " + numPeopleAdded + " persons and " + numEventsAdded + " events to the database.");
                 fillResult.setSuccess(true);
@@ -182,7 +217,7 @@ public class Services {
             numGenGenerated = 0;
             generateGenerations(generations, rootPerson, birthEvent.getYear());
 
-            personDao.insert(rootPerson);
+            personDAO.insert(rootPerson);
             eventDAO.insert(birthEvent);
             numPeopleAdded++;
             numEventsAdded++;
@@ -203,12 +238,9 @@ public class Services {
      * @param r This is the load request with the needed information
      * @return The result of the load
      */
-    public LoadResult load(LoadRequest r, Connection conn) throws DataAccessException {
+    public LoadResult load(LoadRequest r) throws DataAccessException {
         LoadResult loadResult = new LoadResult();
         try {
-            UserDAO userDAO = new UserDAO(conn);
-            PersonDao personDao = new PersonDao(conn);
-            EventDAO eventDAO = new EventDAO(conn);
             if(r.getUserList().size() == 0 || r.getPersonList().size() == 0 || r.getEventList().size() == 0){
                 loadResult.setMessage("Failed to load data. One of the required lists was empty");
                 loadResult.setSuccess(false);
@@ -222,7 +254,7 @@ public class Services {
 
             for(int i = 0; i < r.getPersonList().size(); i++){
                 Person newPerson = r.getPersonList().get(i);
-                personDao.insert(newPerson);
+                personDAO.insert(newPerson);
             }
 
             for(int i = 0; i < r.getEventList().size(); i++){
@@ -247,16 +279,59 @@ public class Services {
      * @param personID The id for the person we want to find
      * @return the Person from the database
      */
-    public PersonResult person(String personID){
-        return null;
+    public PersonResult person(String personID, Person currentUser){
+        PersonResult personResult = new PersonResult();
+        try {
+            Person person = personDAO.getSinglePerson(personID);
+            if(person != null){
+                if(person.getUserName().equals(currentUser.getUserName())){
+                    personResult.setSuccess(true);
+                    personResult.setUsername(person.getUserName());
+                    personResult.setFirstName(person.getFirstName());
+                    personResult.setLastName(person.getLastName());
+                    personResult.setGender(person.getGender());
+                    personResult.setFatherID(person.getFatherID());
+                    personResult.setMotherID(person.getMotherID());
+                    personResult.setSpouseID(person.getSpouseID());
+                    personResult.setPersonID(person.getPersonID());
+                }
+                else {
+                    personResult.setMessage("Error: Sorry, the person requested does not belong to you.");
+                }
+            }
+            else {
+                personResult.setMessage("Error: There is no person with the provide ID");
+            }
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            personResult.setMessage("Error: There was a problem trying to access the database");
+        }
+
+        return personResult;
     }
 
     /**
-     * This method does the logic for getting all the people base on the username
+     * This method does the logic for getting all the people based on the username
      * @return The result of getting all people from the database
      */
-    public PeopleResult people(){
-        return null;
+    public PeopleResult people(String username){
+        PeopleResult peopleResult = new PeopleResult();
+        try {
+            ArrayList<Person> personArrayList = personDAO.getAllPeople(username);
+            if(personArrayList.size() == 0){
+                peopleResult.setMessage("Error: There is no people with the associated username");
+            }
+            else {
+                peopleResult.setData(personArrayList);
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                String json = gson.toJson(peopleResult);
+                peopleResult.setSuccess(true);
+            }
+        } catch (DataAccessException e) {
+            peopleResult.setMessage("Error: Problem trying to access the database");
+            e.printStackTrace();
+        }
+        return peopleResult;
     }
 
     /**
@@ -264,16 +339,59 @@ public class Services {
      * @param eventID The id for the event we want to get
      * @return The result of getting the event
      */
-    public EventResult event(String eventID){
-        return null;
+    public EventResult event(String eventID, Person currentUser){
+        EventResult eventResult = new EventResult();
+        try {
+            Event event = eventDAO.getEvent(eventID);
+            if(event != null){
+                if(event.getUserName().equals(currentUser.getUserName())){
+                    eventResult.setSuccess(true);
+                    eventResult.setEventID(event.getEventID());
+                    eventResult.setUsername(event.getUserName());
+                    eventResult.setPersonID(event.getPersonID());
+                    eventResult.setLatitude(event.getLatitude());
+                    eventResult.setLongitude(event.getLongitude());
+                    eventResult.setCountry(event.getCountry());
+                    eventResult.setCity(event.getCity());
+                    eventResult.setEventType(event.getEventType());
+                    eventResult.setYear(event.getYear());
+                }
+                else {
+                    eventResult.setMessage("Error: Sorry, the person requested does not belong to you.");
+                }
+            }
+            else {
+                eventResult.setMessage("Error: There is no person with the provide ID");
+            }
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            eventResult.setMessage("Error: There was a problem trying to access the database");
+        }
+        return eventResult;
     }
 
     /**
      * This method does the logic for getting all the events based on a user
      * @return The result of getting all the events
      */
-    public AllEventsResult allEvents(){
-        return null;
+    public AllEventsResult allEvents(String username){
+        AllEventsResult allEventsResult = new AllEventsResult();
+        try {
+            ArrayList<Event> eventArrayList = eventDAO.getAllEvents(username);
+            if(eventArrayList.size() == 0){
+                allEventsResult.setMessage("Error: There is no people with the associated username");
+            }
+            else {
+                allEventsResult.setData(eventArrayList);
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                String json = gson.toJson(allEventsResult);
+                allEventsResult.setSuccess(true);
+            }
+        } catch (DataAccessException e) {
+            allEventsResult.setMessage("Error: Problem trying to access the database");
+            e.printStackTrace();
+        }
+        return allEventsResult;
     }
     
     private void generateGenerations(int generations, Person currentPerson, int currentYear) {
@@ -333,9 +451,9 @@ public class Services {
             numGenGenerated++;
             currentYear = momBirth.getYear();
             generateGenerations(generations, mom, currentYear);
-            personDao.insert(mom);
+            personDAO.insert(mom);
             generateGenerations(generations, dad, currentYear);
-            personDao.insert(dad);
+            personDAO.insert(dad);
             numGenGenerated--;
         } catch (DataAccessException e) {
             e.printStackTrace();
@@ -404,5 +522,17 @@ public class Services {
     public int getDeathAge(int minAge){
         Random random = new Random();
         return random.nextInt((120-minAge) + 1) + minAge;
+    }
+
+    public boolean isAuthorized(String authToken) throws DataAccessException {
+        if(authTokenDAO.getAuthToken(authToken) != null){
+            return true;
+        }
+        return false;
+    }
+
+    public Person getLoggedInUser(String token) throws DataAccessException {
+        AuthToken authToken = authTokenDAO.getAuthToken(token);
+        return personDAO.getSinglePerson(authToken.getPersonID());
     }
 }

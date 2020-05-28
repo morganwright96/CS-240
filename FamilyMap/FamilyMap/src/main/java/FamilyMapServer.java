@@ -1,8 +1,7 @@
-import Handlers.PostHandlers.ClearHandler;
+import Handlers.AuthTokenHandlers.EventHandler;
+import Handlers.AuthTokenHandlers.PersonHandler;
+import Handlers.PostHandlers.*;
 import Handlers.FileHandler;
-import Handlers.PostHandlers.FillHandler;
-import Handlers.PostHandlers.LoadHandler;
-import Handlers.PostHandlers.UserLoginHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -26,7 +25,11 @@ public class FamilyMapServer {
         server.createContext("/clear", new ClearHandler());
         server.createContext("/load", new LoadHandler());
         server.createContext("/user/login", new UserLoginHandler());
+        server.createContext("/user/register", new UserRegisterHandler());
         server.createContext("/fill", new FillHandler());
+        server.createContext("/person", new PersonHandler());
+        server.createContext("/event", new EventHandler());
+
     }
 
 }
