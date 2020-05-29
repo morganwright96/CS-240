@@ -4,6 +4,7 @@ import DAO.DataAccessException;
 import DAO.Database;
 
 import DAO.EventDAO;
+import Handlers.JsonEncoder;
 import Model.Event;
 
 import org.junit.jupiter.api.AfterEach;
@@ -29,7 +30,7 @@ public class EventDAOTest {
         db = new Database();
         //and a new event with random data
         newEvent = new Event("a", "morgan", "morgan",
-                1.1f, 1.1f, "USA", "Provo", "Death", 2020);
+                1.1, 1.1, "USA", "Provo", "Death", 2020);
         //Here, we'll open the connection in preparation for the test case to use it
         conn = db.openConnection();
 

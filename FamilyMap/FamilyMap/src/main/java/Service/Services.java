@@ -380,15 +380,21 @@ public class Services {
     public AllEventsResult allEvents(String username){
         AllEventsResult allEventsResult = new AllEventsResult();
         try {
-            ArrayList<Event> eventArrayList = eventDAO.getAllEvents(username);
-            if(eventArrayList.size() == 0){
-                allEventsResult.setMessage("Error: There is no people with the associated username");
+            User currentUser = userDAO.find(username);
+            if(currentUser != null){
+                ArrayList<Event> eventArrayList = eventDAO.getAllEvents(username);
+                if(eventArrayList.size() == 0){
+                    allEventsResult.setMessage("Error: There is no people with the associated username");
+                }
+                else {
+                    allEventsResult.setData(eventArrayList);
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    String json = gson.toJson(allEventsResult);
+                    allEventsResult.setSuccess(true);
+                }
             }
             else {
-                allEventsResult.setData(eventArrayList);
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                String json = gson.toJson(allEventsResult);
-                allEventsResult.setSuccess(true);
+                allEventsResult.setMessage("Error: there is no user in the database with that username");
             }
         } catch (DataAccessException e) {
             allEventsResult.setMessage("Error: Problem trying to access the database");
@@ -476,7 +482,6 @@ public class Services {
 
     public Event genBirthEvent(Person currentPerson, int currentYear){
         int birthAge = getBirthAge();
-        System.out.print(birthAge);
         JsonObject eventJson = getLocationInfo();
         return new Event(uuidGenerator.getUuid(), currentPerson.getUserName(), currentPerson.getPersonID(), eventJson.get("latitude").getAsDouble(),
                 eventJson.get("longitude").getAsDouble(), eventJson.get("country").toString(), eventJson.get("city").toString(),"birth" ,currentYear - birthAge);

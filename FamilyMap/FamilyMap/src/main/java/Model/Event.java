@@ -122,4 +122,19 @@ public class Event {
         this.year = year;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return Double.compare(event.latitude, latitude) == 0 &&
+                Double.compare(event.longitude, longitude) == 0 &&
+                year == event.year &&
+                Objects.equals(eventID, event.eventID) &&
+                Objects.equals(userName, event.userName) &&
+                Objects.equals(personID, event.personID) &&
+                Objects.equals(country, event.country) &&
+                Objects.equals(city, event.city) &&
+                Objects.equals(eventType, event.eventType);
+    }
 }
