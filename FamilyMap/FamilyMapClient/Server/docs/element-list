@@ -1,0 +1,5 @@
+DAO
+com.example.shared.Model
+Service
+com.example.shared.Request
+com.example.shared.Result

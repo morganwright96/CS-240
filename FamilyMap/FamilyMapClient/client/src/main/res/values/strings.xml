@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Family Map</string>
+    <string name="defaultEvent">Click on a marker to see event details</string>
+    <string name="settings">Settings</string>
+    <string name="Search">Search</string>
+    <string name="settings_page">Family Map: Settings</string>
+    <string name="search_page">Family Map: Search</string>
+    <string name="person_page">Family Map: Person Details</string>
+    <string name="lifeLines">Life Story Lines</string>
+    <string name="lifeLinesDescription">SHOW LIFE STORY LINES</string>
+    <string name="treeLines">Family Tree Lines</string>
+    <string name="treeLinesDescription">SHOW FAMILY TREE LINES</string>
+    <string name="spouseLines">Spouse Lines</string>
+    <string name="spouseLinesDescription">SHOW SPOUSE LINES</string>
+    <string name="fatherSide">Father Side</string>
+    <string name="fatherSideDescription">FILTER BY FATHERS SIDE OF THE FAMILY</string>
+    <string name="motherSide">Mother Side</string>
+    <string name="motherSideDescription">FILTER BY MOTHERS SIDE OF THE FAMILY</string>
+    <string name="maleEvents">Male Events</string>
+    <string name="maleEventsDescription">FILTER EVENTS BASED ON GENDER</string>
+    <string name="femaleEvents">Female Events</string>
+    <string name="femaleEventsDescription">FILTER EVENTS BASED ON GENDER</string>
+    <string name="logout">Logout</string>
+    <string name="logoutDescription">RETURN TO THE LOGIN SCREEN</string>
+    <string name="lifeEventGroup">LIFE EVENTS</string>
+    <string name="familyGroup">FAMILY</string>
+    <string name="title_activity_maps">Map</string>
+</resources>
